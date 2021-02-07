@@ -105,7 +105,6 @@ const IndexPage = () => {
                       const element = document.getElementById("image-builder");
                       element &&
                         toPng(element).then(url => {
-                          console.log("url", url);
                           const downloadLink = document.createElement("a");
                           downloadLink.href = url;
                           downloadLink.download = "LineUp";
@@ -130,7 +129,7 @@ const IndexPage = () => {
             <div className="column">
               <div className="tabs">
                 <ul>
-                  {["Starting XI", "Subs", "Styles", "Image"].map(
+                  {["Starting XI", "Subs", "Styles", "Images"].map(
                     (tabName, index) => (
                       <li
                         key={`tab-bitton-${tabName}-${index}`}
