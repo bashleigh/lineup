@@ -66,15 +66,23 @@ export const ImageBuilder = ({
         </div>
       )}
     </div>
-    <div className="image-container">
-      {typeof badge === "string" && (
-        <div className="badge" style={{ background: secondaryColour }}>
-          <img src={badge} />
-        </div>
-      )}
+    <div
+      className={`image-container${
+        image === null && badge !== null
+          ? " has-only-badge"
+          : image !== null
+          ? " has-image"
+          : ""
+      }`}
+    >
       {typeof image === "string" && (
         <div className="image">
           <img src={image} />
+        </div>
+      )}
+      {typeof badge === "string" && (
+        <div className="badge" style={{ background: secondaryColour }}>
+          <img src={badge} />
         </div>
       )}
     </div>

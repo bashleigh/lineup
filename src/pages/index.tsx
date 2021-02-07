@@ -58,7 +58,7 @@ const IndexPage = () => {
     setSubs([...subs.map((value, ind) => (ind === index ? player : value))]);
   };
 
-  let fileReader;
+  let fileReader: FileReader;
 
   if (typeof window !== `undefined`) {
     fileReader = new window.FileReader();
@@ -68,7 +68,7 @@ const IndexPage = () => {
     };
   }
 
-  let badgeFileReader;
+  let badgeFileReader: FileReader;
 
   if (typeof window !== `undefined`) {
     badgeFileReader = new window.FileReader();
@@ -227,6 +227,15 @@ const IndexPage = () => {
                     </span>
                   </label>
                 </div>
+                <a
+                  href="#"
+                  onClick={event => {
+                    event.preventDefault();
+                    setImage(null);
+                  }}
+                >
+                  Remove
+                </a>
                 <label className="label">Badge</label>
                 <div className="file is-boxed">
                   <label className="file-label">
@@ -250,6 +259,15 @@ const IndexPage = () => {
                     </span>
                   </label>
                 </div>
+                <a
+                  href="#"
+                  onClick={event => {
+                    event.preventDefault();
+                    setBadge(null);
+                  }}
+                >
+                  Remove
+                </a>
               </div>
             </div>
           </div>
