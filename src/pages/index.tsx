@@ -38,6 +38,19 @@ const IndexPage = () => {
     ]);
   };
 
+  const clear = () => {
+    setPlayers(Array.from(Array(options.players)).map(index => ({
+      name: "",
+      number: index,
+    })));
+    setSubs(Array.from(Array(options.subs)).map(index => ({
+      name: "",
+      number: index,
+    })));
+
+    setImage(null);
+  }
+
   const updateSub = (player: Player, index: number) => {
     setSubs([...subs.map((value, ind) => (ind === index ? player : value))]);
   };
@@ -57,7 +70,21 @@ const IndexPage = () => {
       <SEO title="Line up Builder" />
       <section className="section">
         <form>
-          <div className="columns">
+          <div className="columns is-reversed">
+            <div className="column">
+              <a href="#" onClick={event => {
+                event.preventDefault();
+                clear();
+              }}>Reset</a>
+              <ImageBuilder
+                primaryColour={primaryColour}
+                secondaryColour={secondaryColour}
+                players={players}
+                subs={subs}
+                capitalise={capitalise}
+                image={image}
+              />
+            </div>
             <div className="column">
               <div className="tabs">
                 <ul>
@@ -159,16 +186,6 @@ const IndexPage = () => {
                   </label>
                 </div>
               </div>
-            </div>
-            <div className="column">
-              <ImageBuilder
-                primaryColour={primaryColour}
-                secondaryColour={secondaryColour}
-                players={players}
-                subs={subs}
-                capitalise={capitalise}
-                image={image}
-              />
             </div>
           </div>
         </form>
