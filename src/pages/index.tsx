@@ -21,6 +21,7 @@ const IndexPage = () => {
   const [subs, setSubs] = useState<string[]>(["", "", "", "", "", ""]);
   const [tab, setTab] = useState<number>(0);
   const [colour, setColour] = useState<string>("#08D3F2");
+  const [capitalise, setCapitalise] = useState<boolean>(false);
 
   return (
     <Layout>
@@ -117,11 +118,21 @@ const IndexPage = () => {
                   }}
                   color={colour}
                 />
+                <hr/>
+                <h4 className="title">Text styles</h4>
+                <div className="field">
+                  <div className="control">
+                    <label className="checkbox">
+                    <input type="checkbox" checked={capitalise} onChange={() => setCapitalise(!capitalise)} />
+                      Capitalise
+                    </label>
+                  </div>
+                </div>
               </div>
             </div>
             <div className="column">
-              <div id="image-builder" style={{ background: colour }}>
-                <label className="label">Lineup</label>
+              <div id="image-builder" style={{ background: colour }} className={capitalise ? 'is-capitalised' : ''}>
+                <label className="label">Line up</label>
                 <ul className="players">
                   {players.map(player => (
                     <li key={`img-player-${player}`}>{player}</li>

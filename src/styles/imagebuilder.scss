@@ -4,6 +4,11 @@
   max-height: 500px;
   max-width: 650px;
   min-width: 650px;
+
+  &.is-capitalised, &.is-capitalised .players {
+    text-transform: uppercase;
+  }
+
   .players {
     font-weight: bold;
   }
