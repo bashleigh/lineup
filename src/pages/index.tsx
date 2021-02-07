@@ -122,11 +122,15 @@ const IndexPage = () => {
     setSubs([...subs.map((value, ind) => (ind === index ? player : value))]);
   };
 
-  const fileReader = new FileReader();
+  let fileReader;
 
-  fileReader.onload = () => {
-    setImage(fileReader.result);
-  };
+  if (typeof window !== `undefined`) {
+    fileReader = new window.FileReader();
+
+    fileReader.onload = () => {
+      setImage(fileReader.result);
+    };
+  }
 
   return (
     <Layout>
@@ -247,6 +251,7 @@ const IndexPage = () => {
                       onChange={event => {
                         event?.target?.files &&
                           event.target.files.length === 1 &&
+                          fileReader &&
                           fileReader.readAsDataURL(event.target.files[0]);
                       }}
                     />
@@ -277,7 +282,7 @@ const IndexPage = () => {
                       {players.map(player => (
                         <li>
                           <DisplayPlayer
-                          type="player"
+                            type="player"
                             numberColour={secondaryColour}
                             player={player}
                           />
