@@ -2,6 +2,8 @@ import React from "react";
 import { Player } from "./../types";
 import { getCorrectTextColor } from "./../utils/textcolor";
 import { DisplayPlayer } from "./player.display";
+import { background } from "./background";
+import * as tinycolor from "tinycolor2";
 
 export const ImageBuilder = ({
   image,
@@ -23,8 +25,9 @@ export const ImageBuilder = ({
   <div
     id="image-builder"
     style={{
-      background: primaryColour,
+      backgroundColor: tinycolor(primaryColour).darken(20),
       color: getCorrectTextColor(primaryColour),
+      backgroundImage: `url("${background(primaryColour)}")`,
     }}
     className={capitalise ? "is-capitalised" : ""}
   >
