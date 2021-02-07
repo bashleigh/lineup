@@ -65,7 +65,7 @@ const IndexPage = () => {
                     (tabName, index) => (
                       <li
                         key={`tab-bitton-${tabName}-${index}`}
-                        className={tab === 0 ? "is-active" : undefined}
+                        className={tab === index ? "is-active" : undefined}
                       >
                         <a
                           href="#"
