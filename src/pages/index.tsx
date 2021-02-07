@@ -24,8 +24,9 @@ const IndexPage = () => {
   const [secondaryColour, setSecondaryColour] = useState<string>(
     barca.secondaryColour,
   );
-  const [capitalise, setCapitalise] = useState<boolean>(false);
+  const [capitalise, setCapitalise] = useState<boolean>(barca.capitalise);
   const [image, setImage] = useState<null | string | ArrayBuffer>(barca.image);
+  const [badge, setBadge] = useState<null | string | ArrayBuffer>(barca.badge);
 
   const updatePlayer = (player: Player, index: number) => {
     setPlayers([
@@ -64,6 +65,16 @@ const IndexPage = () => {
     };
   }
 
+  let badgeFileReader;
+
+  if (typeof window !== `undefined`) {
+    badgeFileReader = new window.FileReader();
+
+    badgeFileReader.onload = () => {
+      setBadge(badgeFileReader.result);
+    };
+  }
+
   return (
     <Layout>
       <SEO title="Line up Builder" />
@@ -87,6 +98,7 @@ const IndexPage = () => {
                 subs={subs}
                 capitalise={capitalise}
                 image={image}
+                badge={badge}
               />
             </div>
             <div className="column">
@@ -166,18 +178,42 @@ const IndexPage = () => {
                 </div>
               </div>
               <div className={`tab${tab === 3 ? " is-active" : ""}`}>
-                <h4 className="title">Image</h4>
+                <h4 className="title">Images</h4>
                 <label className="label">Player</label>
                 <div className="file is-boxed">
                   <label className="file-label">
                     <input
                       className="file-input"
+                      name="player-image"
                       type="file"
                       onChange={event => {
                         event?.target?.files &&
                           event.target.files.length === 1 &&
                           fileReader &&
                           fileReader.readAsDataURL(event.target.files[0]);
+                      }}
+                    />
+                    <span className="file-cta">
+                      <span className="file-icon">
+                        {/* TODO do I really need fontawesome for one icon? */}
+                        <i className="fas fa-upload"></i>
+                      </span>
+                      <span className="file-label">Choose a image</span>
+                    </span>
+                  </label>
+                </div>
+                <label className="label">Badge</label>
+                <div className="file is-boxed">
+                  <label className="file-label">
+                    <input
+                      className="file-input"
+                      name="badge-image"
+                      type="file"
+                      onChange={event => {
+                        event?.target?.files &&
+                          event.target.files.length === 1 &&
+                          badgeFileReader &&
+                          badgeFileReader.readAsDataURL(event.target.files[0]);
                       }}
                     />
                     <span className="file-cta">

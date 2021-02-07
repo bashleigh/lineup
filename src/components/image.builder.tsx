@@ -5,6 +5,7 @@ import { DisplayPlayer } from "./player.display";
 
 export const ImageBuilder = ({
   image,
+  badge,
   primaryColour,
   secondaryColour,
   capitalise,
@@ -12,6 +13,7 @@ export const ImageBuilder = ({
   subs,
 }: {
   image?: string | null | ArrayBuffer;
+  badge?: string | null | ArrayBuffer;
   primaryColour: string;
   secondaryColour: string;
   capitalise: boolean;
@@ -61,8 +63,17 @@ export const ImageBuilder = ({
         </div>
       )}
     </div>
-    <div className="image">
-      {typeof image === "string" && <img src={image} />}
+    <div className="image-container">
+      {typeof badge === "string" && (
+        <div className="badge" style={{ background: secondaryColour }}>
+          <img src={badge} />
+        </div>
+      )}
+      {typeof image === "string" && (
+        <div className="image">
+          <img src={image} />
+        </div>
+      )}
     </div>
   </div>
 );
