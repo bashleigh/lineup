@@ -130,7 +130,7 @@ const IndexPage = () => {
 
   return (
     <Layout>
-      <SEO title="Home" />
+      <SEO title="Line up Builder" />
       <section className="section">
         <form>
           <div className="columns">
