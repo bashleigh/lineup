@@ -1,9 +1,8 @@
-import { PlayerField } from "components/player.details";
-import { DisplayPlayer } from "components/player.display";
+import { ImageBuilder } from "../components/image.builder";
+import { PlayerField } from "../components/player.details";
 import React, { useState } from "react";
 import { ChromePicker } from "react-color";
-import { Player } from "types";
-import { getCorrectTextColor } from "utils/textcolor";
+import { Player } from "./../types";
 
 import Layout from "../components/layout";
 import SEO from "../components/seo";
@@ -62,50 +61,24 @@ const IndexPage = () => {
             <div className="column">
               <div className="tabs">
                 <ul>
-                  <li className={tab === 0 ? "is-active" : undefined}>
-                    <a
-                      href="#"
-                      onClick={event => {
-                        event.preventDefault();
-                        setTab(0);
-                      }}
-                    >
-                      Starting XI
-                    </a>
-                  </li>
-                  <li className={tab === 1 ? "is-active" : undefined}>
-                    <a
-                      href="#"
-                      onClick={event => {
-                        event.preventDefault();
-                        setTab(1);
-                      }}
-                    >
-                      Subs
-                    </a>
-                  </li>
-                  <li className={tab === 2 ? "is-active" : undefined}>
-                    <a
-                      href="#"
-                      onClick={event => {
-                        event.preventDefault();
-                        setTab(2);
-                      }}
-                    >
-                      Styles
-                    </a>
-                  </li>
-                  <li className={tab === 3 ? "is-active" : undefined}>
-                    <a
-                      href="#"
-                      onClick={event => {
-                        event.preventDefault();
-                        setTab(3);
-                      }}
-                    >
-                      Image
-                    </a>
-                  </li>
+                  {["Starting XI", "Subs", "Styles", "Image"].map(
+                    (tabName, index) => (
+                      <li
+                        key={`tab-bitton-${tabName}-${index}`}
+                        className={tab === 0 ? "is-active" : undefined}
+                      >
+                        <a
+                          href="#"
+                          onClick={event => {
+                            event.preventDefault();
+                            setTab(index);
+                          }}
+                        >
+                          {tabName}
+                        </a>
+                      </li>
+                    ),
+                  )}
                 </ul>
               </div>
               <div className={`tab${tab === 0 ? " is-active" : ""}`}>
@@ -188,53 +161,14 @@ const IndexPage = () => {
               </div>
             </div>
             <div className="column">
-              <div
-                id="image-builder"
-                style={{
-                  background: primaryColour,
-                  color: getCorrectTextColor(primaryColour),
-                }}
-                className={capitalise ? "is-capitalised" : ""}
-              >
-                <div className="text">
-                  <div className="player-container">
-                    <label className="label">Starting XI</label>
-                    <ul className="players">
-                      {players.map(player => (
-                        <li>
-                          <DisplayPlayer
-                            type="player"
-                            numberColour={secondaryColour}
-                            player={player}
-                          />
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                  {subs.filter(sub => sub.name !== "").length >= 1 && (
-                    <div className="sub-container">
-                      <label className="label">Subs</label>
-                      <div className="subs">
-                        {subs
-                          .filter(sub => sub.name !== "")
-                          .map(sub => (
-                            <DisplayPlayer
-                              type="sub"
-                              numberColour={secondaryColour}
-                              player={sub}
-                              key={`img-player-${sub.name}-${sub.number}`}
-                            />
-                          ))
-                          //@ts-ignore
-                          .reduce((prev, curr) => [prev, " / ", curr])}
-                      </div>
-                    </div>
-                  )}
-                </div>
-                <div className="image">
-                  {typeof image === "string" && <img src={image} />}
-                </div>
-              </div>
+              <ImageBuilder
+                primaryColour={primaryColour}
+                secondaryColour={secondaryColour}
+                players={players}
+                subs={subs}
+                capitalise={capitalise}
+                image={image}
+              />
             </div>
           </div>
         </form>
