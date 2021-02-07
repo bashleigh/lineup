@@ -85,25 +85,25 @@
     }
   }
 
-  @media only screen and (max-width: $tablet) {
-    min-height: 300px;
-    max-height: 300px;
-    max-width: 325px;
-    min-width: 325px;
+  // @media only screen and (max-width: $tablet) {
+  //   min-height: 300px;
+  //   max-height: 300px;
+  //   max-width: 325px;
+  //   min-width: 325px;
 
-    .text {
-      font-size: 7.5px;
-      min-width: 32.5%;
-    }
+  //   .text {
+  //     font-size: 7.5px;
+  //     min-width: 32.5%;
+  //   }
 
-    .image-container {
-      .badge {
-        width: 1.5em;
-        height: 1.5em;
-        padding: .125em;
-        top: calc(50% - 1.5em);
-        left: -.5em;
-      }
-    }
-  }
+  //   .image-container {
+  //     .badge {
+  //       width: 1.5em;
+  //       height: 1.5em;
+  //       padding: .125em;
+  //       top: calc(50% - 1.5em);
+  //       left: -.5em;
+  //     }
+  //   }
+  // }
 }
