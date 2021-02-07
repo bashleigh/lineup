@@ -108,6 +108,7 @@ const IndexPage = () => {
   const [primaryColour, setPrimaryColour] = useState<string>("#0A2666");
   const [secondaryColour, setSecondaryColour] = useState<string>("#D6D118");
   const [capitalise, setCapitalise] = useState<boolean>(false);
+  const [image, setImage] = useState<null | string | ArrayBuffer>(null);
 
   const updatePlayer = (player: Player, index: number) => {
     setPlayers([
@@ -117,6 +118,12 @@ const IndexPage = () => {
 
   const updateSub = (player: Player, index: number) => {
     setSubs([...subs.map((value, ind) => (ind === index ? player : value))]);
+  };
+
+  const fileReader = new FileReader();
+
+  fileReader.onload = () => {
+    setImage(fileReader.result);
   };
 
   return (
@@ -159,6 +166,17 @@ const IndexPage = () => {
                       }}
                     >
                       Styles
+                    </a>
+                  </li>
+                  <li className={tab === 3 ? "is-active" : undefined}>
+                    <a
+                      href="#"
+                      onClick={event => {
+                        event.preventDefault();
+                        setTab(3);
+                      }}
+                    >
+                      Image
                     </a>
                   </li>
                 </ul>
@@ -216,6 +234,30 @@ const IndexPage = () => {
                   </div>
                 </div>
               </div>
+              <div className={`tab${tab === 3 ? " is-active" : ""}`}>
+                <h4 className="title">Image</h4>
+                <label className="label">First Colour</label>
+                <div className="file is-boxed">
+                  <label className="file-label">
+                    <input
+                      className="file-input"
+                      type="file"
+                      onChange={event => {
+                        event?.target?.files &&
+                          event.target.files.length === 1 &&
+                          fileReader.readAsDataURL(event.target.files[0]);
+                      }}
+                    />
+                    <span className="file-cta">
+                      <span className="file-icon">
+                        {/* TODO do I really need fontawesome for one icon? */}
+                        <i className="fas fa-upload"></i>
+                      </span>
+                      <span className="file-label">Choose a image</span>
+                    </span>
+                  </label>
+                </div>
+              </div>
             </div>
             <div className="column">
               <div
@@ -258,6 +300,9 @@ const IndexPage = () => {
                       </div>
                     </div>
                   )}
+                </div>
+                <div className="image">
+                  {typeof image === "string" && <img src={image} />}
                 </div>
               </div>
             </div>

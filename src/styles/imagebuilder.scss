@@ -1,5 +1,4 @@
 #image-builder {
-  padding: 2em;
   min-height: 500px;
   max-height: 500px;
   max-width: 650px;
@@ -12,6 +11,11 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+  padding: 2em;
+  }
+
+  .image {
+    overflow: hidden;
   }
 
   .label {
