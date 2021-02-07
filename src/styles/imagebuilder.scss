@@ -16,6 +16,7 @@
 
   .label {
     font-size: .8em;
+    color: inherit;
   }
 
   &.is-capitalised {
@@ -24,6 +25,7 @@
 
   .players {
     font-weight: bold;
+    font-size: 1.25em;
   }
 
   .player-number {

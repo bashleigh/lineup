@@ -71,6 +71,20 @@ const DisplayPlayer = ({
   </span>
 );
 
+const getCorrectTextColor = (hex: string) => {
+  const hexToR = h => parseInt(cutHex(h).substring(0, 2), 16);
+  const hexToG = h => parseInt(cutHex(h).substring(2, 4), 16);
+  const hexToB = h => parseInt(cutHex(h).substring(4, 6), 16);
+  const cutHex = h => (h.charAt(0) == "#" ? h.substring(1, 7) : h);
+
+  const threshold = 130;
+  const [hRed, hGreen, hBlue] = [hexToR(hex), hexToG(hex), hexToB(hex)];
+
+  return (hRed * 299 + hGreen * 587 + hBlue * 114) / 1000 > threshold
+    ? "#000000"
+    : "#FFFFFF";
+};
+
 const IndexPage = () => {
   // for changing to 5 a side later on
   const options = {
@@ -206,7 +220,10 @@ const IndexPage = () => {
             <div className="column">
               <div
                 id="image-builder"
-                style={{ background: primaryColour }}
+                style={{
+                  background: primaryColour,
+                  color: getCorrectTextColor(primaryColour),
+                }}
                 className={capitalise ? "is-capitalised" : ""}
               >
                 <div className="text">
@@ -214,7 +231,7 @@ const IndexPage = () => {
                     <label className="label">Starting XI</label>
                     <ul className="players">
                       {players.map(player => (
-                        <li key={`img-player-${player.name}-${player.number}`}>
+                        <li>
                           <DisplayPlayer
                             numberColour={secondaryColour}
                             player={player}
@@ -228,15 +245,16 @@ const IndexPage = () => {
                       <label className="label">Subs</label>
                       <div className="subs">
                         {subs
-                        .filter(sub => sub.name !== '')
-                        .map(sub => (
-                          <DisplayPlayer
-                            numberColour={secondaryColour}
-                            player={sub}
-                            key={`img-player-${sub.name}-${sub.number}`}
-                          />
-                          //@ts-ignore
-                        )).reduce((prev, curr) => [prev, ' / ', curr])}
+                          .filter(sub => sub.name !== "")
+                          .map(sub => (
+                            <DisplayPlayer
+                              numberColour={secondaryColour}
+                              player={sub}
+                              key={`img-player-${sub.name}-${sub.number}`}
+                            />
+                            //@ts-ignore
+                          ))
+                          .reduce((prev, curr) => [prev, " / ", curr])}
                       </div>
                     </div>
                   )}
