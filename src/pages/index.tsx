@@ -3,6 +3,7 @@ import { PlayerField } from "../components/player.details";
 import React, { useState } from "react";
 import { ChromePicker } from "react-color";
 import { Player } from "./../types";
+import { toPng } from "html-to-image";
 
 import Layout from "../components/layout";
 import SEO from "../components/seo";
@@ -84,15 +85,38 @@ const IndexPage = () => {
         <form>
           <div className="columns is-reversed">
             <div className="column">
-              <a
-                href="#"
-                onClick={event => {
-                  event.preventDefault();
-                  clear();
-                }}
-              >
-                Reset
-              </a>
+              <div className="level">
+                <div className="level-left">
+                  <a
+                    href="#"
+                    onClick={event => {
+                      event.preventDefault();
+                      clear();
+                    }}
+                  >
+                    Reset
+                  </a>
+                </div>
+                <div className="level-left">
+                  <button
+                    className="button is-primary"
+                    onClick={event => {
+                      event.preventDefault();
+                      const element = document.getElementById("image-builder");
+                      element &&
+                        toPng(element).then(url => {
+                          console.log("url", url);
+                          const downloadLink = document.createElement("a");
+                          downloadLink.href = url;
+                          downloadLink.download = "LineUp";
+                          downloadLink.click();
+                        });
+                    }}
+                  >
+                    Download
+                  </button>
+                </div>
+              </div>
               <ImageBuilder
                 primaryColour={primaryColour}
                 secondaryColour={secondaryColour}
