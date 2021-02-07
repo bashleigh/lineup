@@ -54,7 +54,25 @@ const PlayerField = ({
   </div>
 );
 
+const DisplayPlayer = ({
+  player,
+  numberColour,
+}: {
+  player: Player;
+  numberColour: string;
+}) => (
+  <span className="player">
+    {player.number !== "" && (
+      <span style={{ color: numberColour }} className="player-number">
+        {player.number}
+      </span>
+    )}
+    <span className="player-name">{player.name}</span>
+  </span>
+);
+
 const IndexPage = () => {
+  // for changing to 5 a side later on
   const options = {
     players: 11,
     subs: 6,
@@ -73,7 +91,8 @@ const IndexPage = () => {
     })),
   );
   const [tab, setTab] = useState<number>(0);
-  const [colour, setColour] = useState<string>("#08D3F2");
+  const [primaryColour, setPrimaryColour] = useState<string>("#0A2666");
+  const [secondaryColour, setSecondaryColour] = useState<string>("#D6D118");
   const [capitalise, setCapitalise] = useState<boolean>(false);
 
   const updatePlayer = (player: Player, index: number) => {
@@ -91,7 +110,7 @@ const IndexPage = () => {
       <SEO title="Home" />
       <section className="section">
         <form>
-          <div className="columns is-vcentered">
+          <div className="columns">
             <div className="column">
               <div className="tabs">
                 <ul>
@@ -153,12 +172,20 @@ const IndexPage = () => {
                 ))}
               </div>
               <div className={`tab${tab === 2 ? " is-active" : ""}`}>
-                <label className="label">Team Colour</label>
+                <h4 className="title">Team Colour</h4>
+                <label className="label">First Colour</label>
                 <ChromePicker
                   onChange={colour => {
-                    setColour(colour.hex);
+                    setPrimaryColour(colour.hex);
                   }}
-                  color={colour}
+                  color={primaryColour}
+                />
+                <label className="label">Second Colour</label>
+                <ChromePicker
+                  onChange={colour => {
+                    setSecondaryColour(colour.hex);
+                  }}
+                  color={secondaryColour}
                 />
                 <hr />
                 <h4 className="title">Text styles</h4>
@@ -179,36 +206,34 @@ const IndexPage = () => {
             <div className="column">
               <div
                 id="image-builder"
-                style={{ background: colour }}
+                style={{ background: primaryColour }}
                 className={capitalise ? "is-capitalised" : ""}
               >
                 <div className="text">
                   <div className="player-container">
                     <label className="label">Starting XI</label>
                     <ul className="players">
-                      {players
-                        .map(player =>
-                          player.number
-                            ? Object.values(player).join(" ")
-                            : player.name,
-                        )
-                        .map(player => (
-                          <li key={`img-player-${player}`}>{player}</li>
-                        ))}
+                      {players.map(player => (
+                        <li key={`img-player-${player.name}-${player.number}`}>
+                          <DisplayPlayer
+                            numberColour={secondaryColour}
+                            player={player}
+                          />
+                        </li>
+                      ))}
                     </ul>
                   </div>
                   {subs.filter(sub => sub.name !== "").length >= 1 && (
                     <div className="sub-container">
                       <label className="label">Subs</label>
                       <div className="subs">
-                        {subs
-                          .filter(sub => sub.name !== "")
-                          .map(sub =>
-                            sub.number
-                              ? Object.values(sub).join(" ")
-                              : sub.name,
-                          )
-                          .join(" / ")}
+                        {subs.map(sub => (
+                          <DisplayPlayer
+                            numberColour={secondaryColour}
+                            player={sub}
+                            key={`img-player-${sub.name}-${sub.number}`}
+                          />
+                        ))}
                       </div>
                     </div>
                   )}
