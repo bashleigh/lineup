@@ -227,13 +227,16 @@ const IndexPage = () => {
                     <div className="sub-container">
                       <label className="label">Subs</label>
                       <div className="subs">
-                        {subs.map(sub => (
+                        {subs
+                        .filter(sub => sub.name !== '')
+                        .map(sub => (
                           <DisplayPlayer
                             numberColour={secondaryColour}
                             player={sub}
                             key={`img-player-${sub.name}-${sub.number}`}
                           />
-                        ))}
+                          //@ts-ignore
+                        )).reduce((prev, curr) => [prev, ' / ', curr])}
                       </div>
                     </div>
                   )}
