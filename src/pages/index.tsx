@@ -49,6 +49,7 @@ const IndexPage = () => {
     );
 
     setImage(null);
+    setBadge(null);
   };
 
   const updateSub = (player: Player, index: number) => {
