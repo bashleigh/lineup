@@ -252,8 +252,8 @@ const IndexPage = () => {
                               player={sub}
                               key={`img-player-${sub.name}-${sub.number}`}
                             />
-                            //@ts-ignore
                           ))
+                          //@ts-ignore
                           .reduce((prev, curr) => [prev, " / ", curr])}
                       </div>
                     </div>
