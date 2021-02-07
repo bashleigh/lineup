@@ -27,14 +27,18 @@ const Layout = ({ children }) => {
     <>
       <Header siteTitle={data.site.siteMetadata?.title || `Title`} />
       <main>{children}</main>
-      <footer
-        style={{
-          marginTop: `2rem`,
-        }}
-      >
-        {/* © {new Date().getFullYear()}, Built with
-          {` `}
-          <a href="https://www.gatsbyjs.com">Gatsby</a> */}
+      <footer className="footer">
+        <ul>
+          <li>Built by Ashleigh</li>
+          <li>
+            <a href="https://github.com/bashleigh">Github</a>
+          </li>
+          <li>
+            <a href="https://www.linkedin.com/in/ashleigh-simonelli-01b5a1b6/">
+              Linkedin
+            </a>
+          </li>
+        </ul>
       </footer>
     </>
   );
