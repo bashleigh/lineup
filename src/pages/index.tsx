@@ -16,21 +16,18 @@ const IndexPage = () => {
     "",
     "",
     "",
-    "",
-    "",
   ]);
 
   return (
     <Layout>
       <SEO title="Home" />
-      <h1>Hi people</h1>
       <form>
         <div className="columns">
           <div className="column">
             {players.map((player, index) => (
               <div className="field has-addons">
                 <div className="control">
-                  {index}
+                  {index +1}
                 </div>
                 <div className="control">
                   <input
@@ -50,9 +47,13 @@ const IndexPage = () => {
             ))}
           </div>
           <div className="column">
-            {players.map((player) => (
-              <div>{player}</div>
-            ))}
+            <div id="image-builder">
+              <ul className="players">
+                {players.map((player) => (
+                  <li>{player}</li>
+                ))}
+              </ul>
+            </div>
           </div>
         </div>
       </form>
