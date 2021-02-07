@@ -6,6 +6,7 @@ import { Player } from "./../types";
 
 import Layout from "../components/layout";
 import SEO from "../components/seo";
+import { barca } from "./../utils/barca";
 
 const IndexPage = () => {
   // for changing to 5 a side later on
@@ -14,23 +15,17 @@ const IndexPage = () => {
     subs: 6,
   };
 
-  const [players, setPlayers] = useState<Player[]>(
-    Array.from(Array(options.players)).map(index => ({
-      name: "",
-      number: index,
-    })),
-  );
-  const [subs, setSubs] = useState<Player[]>(
-    Array.from(Array(options.subs)).map(index => ({
-      name: "",
-      number: index,
-    })),
-  );
+  const [players, setPlayers] = useState<Player[]>(barca.players);
+  const [subs, setSubs] = useState<Player[]>(barca.subs);
   const [tab, setTab] = useState<number>(0);
-  const [primaryColour, setPrimaryColour] = useState<string>("#0A2666");
-  const [secondaryColour, setSecondaryColour] = useState<string>("#D6D118");
+  const [primaryColour, setPrimaryColour] = useState<string>(
+    barca.primaryColour,
+  );
+  const [secondaryColour, setSecondaryColour] = useState<string>(
+    barca.secondaryColour,
+  );
   const [capitalise, setCapitalise] = useState<boolean>(false);
-  const [image, setImage] = useState<null | string | ArrayBuffer>(null);
+  const [image, setImage] = useState<null | string | ArrayBuffer>(barca.image);
 
   const updatePlayer = (player: Player, index: number) => {
     setPlayers([
@@ -39,17 +34,21 @@ const IndexPage = () => {
   };
 
   const clear = () => {
-    setPlayers(Array.from(Array(options.players)).map(index => ({
-      name: "",
-      number: index,
-    })));
-    setSubs(Array.from(Array(options.subs)).map(index => ({
-      name: "",
-      number: index,
-    })));
+    setPlayers(
+      Array.from(Array(options.players)).map(index => ({
+        name: "",
+        number: index,
+      })),
+    );
+    setSubs(
+      Array.from(Array(options.subs)).map(index => ({
+        name: "",
+        number: index,
+      })),
+    );
 
     setImage(null);
-  }
+  };
 
   const updateSub = (player: Player, index: number) => {
     setSubs([...subs.map((value, ind) => (ind === index ? player : value))]);
@@ -72,10 +71,15 @@ const IndexPage = () => {
         <form>
           <div className="columns is-reversed">
             <div className="column">
-              <a href="#" onClick={event => {
-                event.preventDefault();
-                clear();
-              }}>Reset</a>
+              <a
+                href="#"
+                onClick={event => {
+                  event.preventDefault();
+                  clear();
+                }}
+              >
+                Reset
+              </a>
               <ImageBuilder
                 primaryColour={primaryColour}
                 secondaryColour={secondaryColour}

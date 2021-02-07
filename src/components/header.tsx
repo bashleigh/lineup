@@ -2,10 +2,8 @@ import { Link } from "gatsby";
 import React from "react";
 
 const Header = ({ siteTitle }) => (
-  <header
-  >
-    <nav className="navbar is-primary"
-    >
+  <header>
+    <nav className="navbar is-primary">
       <a className="navbar-item">
         <Link
           to="/"
