@@ -118,12 +118,16 @@ const IndexPage = () => {
                   }}
                   color={colour}
                 />
-                <hr/>
+                <hr />
                 <h4 className="title">Text styles</h4>
                 <div className="field">
                   <div className="control">
                     <label className="checkbox">
-                    <input type="checkbox" checked={capitalise} onChange={() => setCapitalise(!capitalise)} />
+                      <input
+                        type="checkbox"
+                        checked={capitalise}
+                        onChange={() => setCapitalise(!capitalise)}
+                      />
                       Capitalise
                     </label>
                   </div>
@@ -131,21 +135,29 @@ const IndexPage = () => {
               </div>
             </div>
             <div className="column">
-              <div id="image-builder" style={{ background: colour }} className={capitalise ? 'is-capitalised' : ''}>
-                <label className="label">Line up</label>
-                <ul className="players">
-                  {players.map(player => (
-                    <li key={`img-player-${player}`}>{player}</li>
-                  ))}
-                </ul>
-                {subs.filter(sub => sub !== "").length >= 1 && (
-                  <>
-                    <label className="label">Subs</label>
-                    <div className="subs">
-                      {subs.filter(sub => sub !== "").join(" / ")}
+              <div
+                id="image-builder"
+                style={{ background: colour }}
+                className={capitalise ? "is-capitalised" : ""}
+              >
+                <div className="text">
+                  <div className="player-container">
+                    <label className="label">Line up</label>
+                    <ul className="players">
+                      {players.map(player => (
+                        <li key={`img-player-${player}`}>{player}</li>
+                      ))}
+                    </ul>
+                  </div>
+                  {subs.filter(sub => sub !== "").length >= 1 && (
+                    <div className="sub-container">
+                      <label className="label">Subs</label>
+                      <div className="subs">
+                        {subs.filter(sub => sub !== "").join(" / ")}
+                      </div>
                     </div>
-                  </>
-                )}
+                  )}
+                </div>
               </div>
             </div>
           </div>

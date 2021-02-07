@@ -5,11 +5,29 @@
   max-width: 650px;
   min-width: 650px;
 
-  &.is-capitalised, &.is-capitalised .players {
+  display: flex;
+  flex-direction: row;
+  
+  .text {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .label {
+    font-size: .8em;
+  }
+
+  &.is-capitalised {
     text-transform: uppercase;
   }
 
   .players {
     font-weight: bold;
+  }
+
+  .subs {
+    font-size: .8em;
+    font-weight: 300;
   }
 }
