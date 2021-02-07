@@ -1,91 +1,12 @@
+import { PlayerField } from "components/player.details";
+import { DisplayPlayer } from "components/player.display";
 import React, { useState } from "react";
 import { ChromePicker } from "react-color";
+import { Player } from "types";
+import { getCorrectTextColor } from "utils/textcolor";
 
 import Layout from "../components/layout";
 import SEO from "../components/seo";
-
-type Player = {
-  number?: string;
-  name?: string;
-};
-
-const PlayerField = ({
-  player,
-  index,
-  updatePlayer,
-}: {
-  player?: Player;
-  index: number;
-  updatePlayer: (player: Player, index: number) => void;
-}) => (
-  <div className="field has-addons">
-    <div className="control">
-      <label className="help">Number</label>
-      <input
-        className="input"
-        value={player ? player.number : ""}
-        onChange={event => {
-          updatePlayer(
-            {
-              ...player,
-              number: event.target.value,
-            },
-            index,
-          );
-        }}
-      />
-    </div>
-    <div className="control is-expanded">
-      <label className="help">Surname</label>
-      <input
-        className="input"
-        value={player ? player.name : ""}
-        onChange={event => {
-          updatePlayer(
-            {
-              ...player,
-              name: event.target.value,
-            },
-            index,
-          );
-        }}
-      />
-    </div>
-  </div>
-);
-
-const DisplayPlayer = ({
-  player,
-  numberColour,
-  type,
-}: {
-  player: Player;
-  numberColour: string;
-  type: string;
-}) => (
-  <span className={`player player-${type}`}>
-    {player.number !== "" && (
-      <span style={{ color: numberColour }} className="player-number">
-        {player.number}
-      </span>
-    )}
-    <span className="player-name">{player.name}</span>
-  </span>
-);
-
-const getCorrectTextColor = (hex: string) => {
-  const hexToR = h => parseInt(cutHex(h).substring(0, 2), 16);
-  const hexToG = h => parseInt(cutHex(h).substring(2, 4), 16);
-  const hexToB = h => parseInt(cutHex(h).substring(4, 6), 16);
-  const cutHex = h => (h.charAt(0) == "#" ? h.substring(1, 7) : h);
-
-  const threshold = 130;
-  const [hRed, hGreen, hBlue] = [hexToR(hex), hexToG(hex), hexToB(hex)];
-
-  return (hRed * 299 + hGreen * 587 + hBlue * 114) / 1000 > threshold
-    ? "#000000"
-    : "#FFFFFF";
-};
 
 const IndexPage = () => {
   // for changing to 5 a side later on
