@@ -36,15 +36,15 @@ const IndexPage = () => {
 
   const clear = () => {
     setPlayers(
-      Array.from(Array(options.players)).map(index => ({
+      Array.from(Array(options.players)).map((_, index) => ({
         name: "",
-        number: index,
+        number: (index +1).toString(),
       })),
     );
     setSubs(
-      Array.from(Array(options.subs)).map(index => ({
+      Array.from(Array(options.subs)).map((_, index) => ({
         name: "",
-        number: index,
+        number: (index +1).toString(),
       })),
     );
 
