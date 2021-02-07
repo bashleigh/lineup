@@ -57,11 +57,13 @@ const PlayerField = ({
 const DisplayPlayer = ({
   player,
   numberColour,
+  type,
 }: {
   player: Player;
   numberColour: string;
+  type: string;
 }) => (
-  <span className="player">
+  <span className={`player player-${type}`}>
     {player.number !== "" && (
       <span style={{ color: numberColour }} className="player-number">
         {player.number}
@@ -236,7 +238,7 @@ const IndexPage = () => {
               </div>
               <div className={`tab${tab === 3 ? " is-active" : ""}`}>
                 <h4 className="title">Image</h4>
-                <label className="label">First Colour</label>
+                <label className="label">Player</label>
                 <div className="file is-boxed">
                   <label className="file-label">
                     <input
@@ -275,6 +277,7 @@ const IndexPage = () => {
                       {players.map(player => (
                         <li>
                           <DisplayPlayer
+                          type="player"
                             numberColour={secondaryColour}
                             player={player}
                           />
@@ -290,6 +293,7 @@ const IndexPage = () => {
                           .filter(sub => sub.name !== "")
                           .map(sub => (
                             <DisplayPlayer
+                              type="sub"
                               numberColour={secondaryColour}
                               player={sub}
                               key={`img-player-${sub.name}-${sub.number}`}
