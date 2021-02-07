@@ -4,24 +4,87 @@ import { ChromePicker } from "react-color";
 import Layout from "../components/layout";
 import SEO from "../components/seo";
 
+type Player = {
+  number?: string;
+  name?: string;
+};
+
+const PlayerField = ({
+  player,
+  index,
+  updatePlayer,
+}: {
+  player?: Player;
+  index: number;
+  updatePlayer: (player: Player, index: number) => void;
+}) => (
+  <div className="field has-addons">
+    <div className="control">
+      <label className="help">Number</label>
+      <input
+        className="input"
+        value={player ? player.number : ""}
+        onChange={event => {
+          updatePlayer(
+            {
+              ...player,
+              number: event.target.value,
+            },
+            index,
+          );
+        }}
+      />
+    </div>
+    <div className="control is-expanded">
+      <label className="help">Surname</label>
+      <input
+        className="input"
+        value={player ? player.name : ""}
+        onChange={event => {
+          updatePlayer(
+            {
+              ...player,
+              name: event.target.value,
+            },
+            index,
+          );
+        }}
+      />
+    </div>
+  </div>
+);
+
 const IndexPage = () => {
-  const [players, setPlayers] = useState<string[]>([
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-  ]);
-  const [subs, setSubs] = useState<string[]>(["", "", "", "", "", ""]);
+  const options = {
+    players: 11,
+    subs: 6,
+  };
+
+  const [players, setPlayers] = useState<Player[]>(
+    Array.from(Array(options.players)).map(index => ({
+      name: "",
+      number: index,
+    })),
+  );
+  const [subs, setSubs] = useState<Player[]>(
+    Array.from(Array(options.subs)).map(index => ({
+      name: "",
+      number: index,
+    })),
+  );
   const [tab, setTab] = useState<number>(0);
   const [colour, setColour] = useState<string>("#08D3F2");
   const [capitalise, setCapitalise] = useState<boolean>(false);
+
+  const updatePlayer = (player: Player, index: number) => {
+    setPlayers([
+      ...players.map((value, ind) => (ind === index ? player : value)),
+    ]);
+  };
+
+  const updateSub = (player: Player, index: number) => {
+    setSubs([...subs.map((value, ind) => (ind === index ? player : value))]);
+  };
 
   return (
     <Layout>
@@ -40,7 +103,7 @@ const IndexPage = () => {
                         setTab(0);
                       }}
                     >
-                      Players
+                      Starting XI
                     </a>
                   </li>
                   <li className={tab === 1 ? "is-active" : undefined}>
@@ -68,46 +131,25 @@ const IndexPage = () => {
                 </ul>
               </div>
               <div className={`tab${tab === 0 ? " is-active" : ""}`}>
+                <label className="label">Starting XI</label>
                 {players.map((player, index) => (
-                  <div className="field">
-                    <div className="control has-icons-left">
-                      <div className="icon">{index + 1}</div>
-                      <input
-                        className="input"
-                        key={`player=${index}`}
-                        value={player}
-                        onChange={event => {
-                          setPlayers(
-                            players.map((pl, ind) => {
-                              return ind === index ? event.target.value : pl;
-                            }),
-                          );
-                        }}
-                      />
-                    </div>
-                  </div>
+                  <PlayerField
+                    key={`player-field-${index}`}
+                    player={player}
+                    index={index}
+                    updatePlayer={updatePlayer}
+                  />
                 ))}
               </div>
               <div className={`tab${tab === 1 ? " is-active" : ""}`}>
                 <label className="label">Subs</label>
                 {subs.map((sub, index) => (
-                  <div className="field">
-                    <div className="control has-icons-left">
-                      <div className="icon">{index + 1}</div>
-                      <input
-                        className="input"
-                        key={`sub-${index}`}
-                        value={sub}
-                        onChange={event => {
-                          setSubs(
-                            subs.map((pl, ind) => {
-                              return ind === index ? event.target.value : pl;
-                            }),
-                          );
-                        }}
-                      />
-                    </div>
-                  </div>
+                  <PlayerField
+                    key={`sub-field-${index}`}
+                    player={sub}
+                    index={index}
+                    updatePlayer={updateSub}
+                  />
                 ))}
               </div>
               <div className={`tab${tab === 2 ? " is-active" : ""}`}>
@@ -142,18 +184,31 @@ const IndexPage = () => {
               >
                 <div className="text">
                   <div className="player-container">
-                    <label className="label">Line up</label>
+                    <label className="label">Starting XI</label>
                     <ul className="players">
-                      {players.map(player => (
-                        <li key={`img-player-${player}`}>{player}</li>
-                      ))}
+                      {players
+                        .map(player =>
+                          player.number
+                            ? Object.values(player).join(" ")
+                            : player.name,
+                        )
+                        .map(player => (
+                          <li key={`img-player-${player}`}>{player}</li>
+                        ))}
                     </ul>
                   </div>
-                  {subs.filter(sub => sub !== "").length >= 1 && (
+                  {subs.filter(sub => sub.name !== "").length >= 1 && (
                     <div className="sub-container">
                       <label className="label">Subs</label>
                       <div className="subs">
-                        {subs.filter(sub => sub !== "").join(" / ")}
+                        {subs
+                          .filter(sub => sub.name !== "")
+                          .map(sub =>
+                            sub.number
+                              ? Object.values(sub).join(" ")
+                              : sub.name,
+                          )
+                          .join(" / ")}
                       </div>
                     </div>
                   )}
