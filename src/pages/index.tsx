@@ -132,7 +132,7 @@ const IndexPage = () => {
                   {["Starting XI", "Subs", "Styles", "Images"].map(
                     (tabName, index) => (
                       <li
-                        key={`tab-bitton-${tabName}-${index}`}
+                        key={`tab-button-${tabName}-${index}`}
                         className={tab === index ? "is-active" : undefined}
                       >
                         <a
