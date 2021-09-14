@@ -75,7 +75,7 @@ export default () => {
   }, [])
 
   useEffect(() => {
-    if (players.length >=0) localStorage.setItem('squad', JSON.stringify(players))
+    localStorage.setItem('squad', JSON.stringify(players))
   }, [players])
 
   return (
@@ -85,7 +85,11 @@ export default () => {
         <button className="button is-primary" onClick={() => setModalOpen(!modalOpen)}>New Player</button>
         <div className="content">
           {players.map(player => <div className="player-list" key={JSON.stringify(player)}>
-            {player.number} {player.name} <div className="tags">{player.position?.map(pos => <span key={`${player.name}-${pos}`} className="tag">{pos}</span>)}</div>
+          <button onClick={() => {
+            setPlayers([
+              ...players.filter(pl => !(pl.name === player.name && pl.number === player.number))
+            ])
+          }} className="button is-ghost">X</button> {player.number} {player.name} <div className="tags">{player.position?.map(pos => <span key={`${player.name}-${pos}`} className="tag">{pos}</span>)}</div>
           </div>)}
         </div>
       </section>
