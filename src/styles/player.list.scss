@@ -1,0 +1,8 @@
+.player-list {
+  display: flex;
+  flex-direction: row;
+
+  .tags {
+    margin: 0 .5rem;
+  }
+}

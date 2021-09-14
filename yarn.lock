@@ -11036,6 +11036,11 @@ react-lifecycles-compat@^3.0.4:
   resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
   integrity sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==
 
+react-multi-select-component@^4.1.11:
+  version "4.1.11"
+  resolved "https://registry.yarnpkg.com/react-multi-select-component/-/react-multi-select-component-4.1.11.tgz#c3455659073ba62fe8309f75fa2cfce9af699696"
+  integrity sha512-7AJjNWFE+1UdJq6ZWAw/CcXyiuIdfOHMA1Xk63+y6X3mnRMB1gjc+Sgo0P60Vg8TGDgdFFyhnY353u65MNMMlQ==
+
 react-refresh@^0.8.3:
   version "0.8.3"
   resolved "https://registry.yarnpkg.com/react-refresh/-/react-refresh-0.8.3.tgz#721d4657672d400c5e3c75d063c4a85fb2d5d68f"
