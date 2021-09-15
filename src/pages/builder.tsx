@@ -1,0 +1,395 @@
+import { ImageBuilder } from "../components/image.builder";
+import React, { useState, useEffect } from "react";
+import { ChromePicker } from "react-color";
+import { Player } from "./../types";
+import { toPng } from "html-to-image";
+import Layout from "../components/layout";
+import SEO from "../components/seo";
+import { barca } from "./../utils/barca";
+import { Droppable, DragDropContext, Draggable } from "react-beautiful-dnd";
+
+const PlayerItem = ({ player, index }: { player: Player; index: number }) => {
+  return (
+    <Draggable
+      key={`${player.number}-${player.name}`}
+      draggableId={`${player.number}-${player.name}`}
+      index={index}
+    >
+      {provided => (
+        <li
+          ref={provided.innerRef}
+          {...provided.draggableProps}
+          {...provided.dragHandleProps}
+        >
+          {player.number} {player.name}
+        </li>
+      )}
+    </Draggable>
+  );
+};
+
+const SquadSelector = ({
+  squad,
+  subs,
+  starting,
+  updateSquad,
+  update11,
+  updateSubs,
+}: {
+  squad: Player[];
+  starting: Player[];
+  subs: Player[];
+  updateSquad: (squad: Player[]) => void;
+  update11: (squad: Player[]) => void;
+  updateSubs: (squad: Player[]) => void;
+}) => {
+  const startingId = "starting";
+  const subsId = "subs";
+  const squadId = "squad";
+
+  const dragEnd = result => {
+    console.log("result", result);
+
+    let player: Player | undefined;
+
+    switch (result.source.droppableId) {
+      case squadId:
+        player = squad.find(
+          squadPlayer =>
+            `${squadPlayer.number}-${squadPlayer.name}` === result.draggableId,
+        );
+        updateSquad(
+          squad.filter(
+            player =>
+              `${player.number}-${player.number}` !== result.draggableId,
+          ),
+        );
+        break;
+      case startingId:
+        player = starting.find(
+          squadPlayer =>
+            `${squadPlayer.number}-${squadPlayer.name}` === result.draggableId,
+        );
+        update11(
+          starting.filter(
+            player =>
+              `${player.number}-${player.number}` !== result.draggableId,
+          ),
+        );
+        break;
+      case subsId:
+        player = subs.find(
+          squadPlayer =>
+            `${squadPlayer.number}-${squadPlayer.name}` === result.draggableId,
+        );
+        updateSubs(
+          subs.filter(
+            player =>
+              `${player.number}-${player.number}` !== result.draggableId,
+          ),
+        );
+        break;
+    }
+
+    console.log("update", player);
+
+    if (!player) return;
+
+    switch (result.destination.droppableId) {
+      case squadId:
+        updateSquad([...squad, player]);
+        break;
+      case startingId:
+        update11([...starting, player]);
+        break;
+      case subsId:
+        updateSubs([...subs, player]);
+        break;
+    }
+  };
+
+  return (
+    <DragDropContext onDragEnd={dragEnd}>
+      <div className="columns">
+        <div className="column">
+          <label>Squad</label>
+          <Droppable droppableId={squadId}>
+            {provided => (
+              <ul {...provided.droppableProps} ref={provided.innerRef}>
+                {squad.map((player, index) => (
+                  <PlayerItem
+                    key={JSON.stringify(player)}
+                    index={index}
+                    player={player}
+                  />
+                ))}
+                {provided.placeholder}
+              </ul>
+            )}
+          </Droppable>
+        </div>
+        <div className="column">
+          <label>Starting XI</label>
+          <Droppable droppableId={startingId}>
+            {provided => (
+              <ul {...provided.droppableProps} ref={provided.innerRef}>
+                {provided.placeholder}
+              </ul>
+            )}
+          </Droppable>
+          <label>Subs</label>
+          <Droppable droppableId={subsId}>
+            {provided => (
+              <ul {...provided.droppableProps} ref={provided.innerRef}>
+                {provided.placeholder}
+              </ul>
+            )}
+          </Droppable>
+        </div>
+      </div>
+    </DragDropContext>
+  );
+};
+
+const Builder = () => {
+  // for changing to 5 a side later on
+  const options = {
+    players: 11,
+    subs: 6,
+  };
+
+  const [squad, setSquad] = useState<Player[]>([]);
+  const [selectedPlayers, setSelectedPlayers] = useState<Player[]>([]);
+  const [subs, setSubs] = useState<Player[]>([]);
+  const [tab, setTab] = useState<number>(0);
+  const [primaryColour, setPrimaryColour] = useState<string>(
+    barca.primaryColour,
+  );
+  const [secondaryColour, setSecondaryColour] = useState<string>(
+    barca.secondaryColour,
+  );
+  const [capitalise, setCapitalise] = useState<boolean>(barca.capitalise);
+  const [image, setImage] = useState<null | string | ArrayBuffer>(barca.image);
+  const [badge, setBadge] = useState<null | string | ArrayBuffer>(barca.badge);
+
+  useEffect(() => {
+    const storedPlayers = localStorage.getItem("squad");
+
+    if (storedPlayers) setSquad(JSON.parse(storedPlayers));
+  }, []);
+
+  const clear = () => {
+    setSelectedPlayers([]);
+    setSubs([]);
+
+    setImage(null);
+    setBadge(null);
+  };
+
+  let fileReader: FileReader;
+
+  if (typeof window !== `undefined`) {
+    fileReader = new window.FileReader();
+
+    fileReader.onload = () => {
+      setImage(fileReader.result);
+    };
+  }
+
+  let badgeFileReader: FileReader;
+
+  if (typeof window !== `undefined`) {
+    badgeFileReader = new window.FileReader();
+
+    badgeFileReader.onload = () => {
+      setBadge(badgeFileReader.result);
+    };
+  }
+
+  return (
+    <Layout>
+      <SEO title="Line up Builder" />
+      <section className="section">
+        <form>
+          <div className="columns is-reversed">
+            <div className="column">
+              <div className="level">
+                <div className="level-left">
+                  <a
+                    href="#"
+                    onClick={event => {
+                      event.preventDefault();
+                      clear();
+                    }}
+                  >
+                    Reset
+                  </a>
+                </div>
+                <div className="level-left">
+                  <button
+                    className="button is-primary"
+                    onClick={event => {
+                      event.preventDefault();
+                      const element = document.getElementById("image-builder");
+                      element &&
+                        toPng(element).then(url => {
+                          const downloadLink = document.createElement("a");
+                          downloadLink.href = url;
+                          downloadLink.download = "LineUp";
+                          downloadLink.click();
+                        });
+                    }}
+                  >
+                    Download
+                  </button>
+                </div>
+              </div>
+              <ImageBuilder
+                primaryColour={primaryColour}
+                secondaryColour={secondaryColour}
+                players={selectedPlayers}
+                subs={subs}
+                capitalise={capitalise}
+                image={image}
+                badge={badge}
+              />
+            </div>
+            <div className="column">
+              <div className="tabs">
+                <ul>
+                  {["Squad", "Styles", "Images"].map((tabName, index) => (
+                    <li
+                      key={`tab-button-${tabName}-${index}`}
+                      className={tab === index ? "is-active" : undefined}
+                    >
+                      <a
+                        href="#"
+                        onClick={event => {
+                          event.preventDefault();
+                          setTab(index);
+                        }}
+                      >
+                        {tabName}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className={`tab${tab === 0 ? " is-active" : ""}`}>
+                <label className="label">Starting XI</label>
+                <SquadSelector
+                  squad={squad}
+                  starting={selectedPlayers}
+                  subs={subs}
+                  update11={setSelectedPlayers}
+                  updateSquad={setSquad}
+                  updateSubs={setSubs}
+                />
+              </div>
+              <div className={`tab${tab === 1 ? " is-active" : ""}`}>
+                <h4 className="title">Team Colour</h4>
+                <label className="label">First Colour</label>
+                <ChromePicker
+                  onChange={colour => {
+                    setPrimaryColour(colour.hex);
+                  }}
+                  color={primaryColour}
+                />
+                <label className="label">Second Colour</label>
+                <ChromePicker
+                  onChange={colour => {
+                    setSecondaryColour(colour.hex);
+                  }}
+                  color={secondaryColour}
+                />
+                <hr />
+                <h4 className="title">Text styles</h4>
+                <div className="field">
+                  <div className="control">
+                    <label className="checkbox">
+                      <input
+                        type="checkbox"
+                        checked={capitalise}
+                        onChange={() => setCapitalise(!capitalise)}
+                      />
+                      Capitalise
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div className={`tab${tab === 2 ? " is-active" : ""}`}>
+                <h4 className="title">Images</h4>
+                <label className="label">Player</label>
+                <div className="file is-boxed">
+                  <label className="file-label">
+                    <input
+                      className="file-input"
+                      name="player-image"
+                      type="file"
+                      onChange={event => {
+                        event?.target?.files &&
+                          event.target.files.length === 1 &&
+                          fileReader &&
+                          fileReader.readAsDataURL(event.target.files[0]);
+                      }}
+                    />
+                    <span className="file-cta">
+                      <span className="file-icon">
+                        {/* TODO do I really need fontawesome for one icon? */}
+                        <i className="fas fa-upload"></i>
+                      </span>
+                      <span className="file-label">Choose a image</span>
+                    </span>
+                  </label>
+                </div>
+                <a
+                  href="#"
+                  onClick={event => {
+                    event.preventDefault();
+                    setImage(null);
+                  }}
+                >
+                  Remove
+                </a>
+                <label className="label">Badge</label>
+                <div className="file is-boxed">
+                  <label className="file-label">
+                    <input
+                      className="file-input"
+                      name="badge-image"
+                      type="file"
+                      onChange={event => {
+                        event?.target?.files &&
+                          event.target.files.length === 1 &&
+                          badgeFileReader &&
+                          badgeFileReader.readAsDataURL(event.target.files[0]);
+                      }}
+                    />
+                    <span className="file-cta">
+                      <span className="file-icon">
+                        {/* TODO do I really need fontawesome for one icon? */}
+                        <i className="fas fa-upload"></i>
+                      </span>
+                      <span className="file-label">Choose a image</span>
+                    </span>
+                  </label>
+                </div>
+                <a
+                  href="#"
+                  onClick={event => {
+                    event.preventDefault();
+                    setBadge(null);
+                  }}
+                >
+                  Remove
+                </a>
+              </div>
+            </div>
+          </div>
+        </form>
+      </section>
+    </Layout>
+  );
+};
+
+export default Builder;
