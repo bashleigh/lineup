@@ -17,7 +17,7 @@ const PlayerItem = ({ player, index }: { player: Player; index: number }) => {
           {...provided.draggableProps}
           {...provided.dragHandleProps}
         >
-          {player.number} {player.name}
+          <span className="player-number">{player.number}</span> {player.name}
         </li>
       )}
     </Draggable>
@@ -163,7 +163,7 @@ const SquadSelector = ({
           <label>Squad</label>
           <Droppable droppableId={squadId}>
             {provided => (
-              <ul {...provided.droppableProps} ref={provided.innerRef}>
+              <ul {...provided.droppableProps} ref={provided.innerRef} className="droppable-location">
                 {setup.squad.map((player, index) => (
                   <PlayerItem key={player.id} index={index} player={player} />
                 ))}
@@ -176,7 +176,7 @@ const SquadSelector = ({
           <label>Starting XI</label>
           <Droppable droppableId={startingId}>
             {provided => (
-              <ul {...provided.droppableProps} ref={provided.innerRef}>
+              <ul {...provided.droppableProps} ref={provided.innerRef} className="droppable-location">
                 {setup.starting.map((player, index) => (
                   <PlayerItem key={player.id} index={index} player={player} />
                 ))}
@@ -187,7 +187,7 @@ const SquadSelector = ({
           <label>Subs</label>
           <Droppable droppableId={subsId}>
             {provided => (
-              <ul {...provided.droppableProps} ref={provided.innerRef}>
+              <ul {...provided.droppableProps} ref={provided.innerRef} className="droppable-location">
                 {setup.subs.map((player, index) => (
                   <PlayerItem key={player.id} index={index} player={player} />
                 ))}
@@ -223,6 +223,7 @@ const Builder = () => {
   const [capitalise, setCapitalise] = useState<boolean>(barca.capitalise);
   const [image, setImage] = useState<null | string | ArrayBuffer>(barca.image);
   const [badge, setBadge] = useState<null | string | ArrayBuffer>(barca.badge);
+  const [badgeOn, setBadgeOn] = useState<boolean>(true)
 
   const clear = () => {
     setSetup({
@@ -301,6 +302,7 @@ const Builder = () => {
                 capitalise={capitalise}
                 image={image}
                 badge={badge}
+                badgeOn={badgeOn}
               />
             </div>
             <div className="column">
@@ -396,6 +398,10 @@ const Builder = () => {
                   Remove
                 </a>
                 <label className="label">Badge</label>
+                <label>
+                  Show Badge
+                  <input name="badge-on" type="radio" checked={badgeOn} onClick={() => setBadgeOn(!badgeOn)} />
+                </label>
                 <div className="file is-boxed">
                   <label className="file-label">
                     <input

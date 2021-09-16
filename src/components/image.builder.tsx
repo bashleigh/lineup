@@ -13,9 +13,11 @@ export const ImageBuilder = ({
   capitalise,
   players,
   subs,
+  badgeOn,
 }: {
   image?: string | null | ArrayBuffer;
   badge?: string | null | ArrayBuffer;
+  badgeOn: boolean,
   primaryColour: string;
   secondaryColour: string;
   capitalise: boolean;
@@ -80,7 +82,7 @@ export const ImageBuilder = ({
           <img src={image} />
         </div>
       )}
-      {typeof badge === "string" && (
+      {badgeOn && typeof badge === "string" && (
         <div className="badge" style={{ background: secondaryColour }}>
           <img src={badge} />
         </div>

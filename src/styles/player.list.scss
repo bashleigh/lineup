@@ -6,3 +6,27 @@
     margin: 0 .5rem;
   }
 }
+
+.droppable-location {
+  border-radius: .5em;
+  background: lightgrey;
+  min-height: 100px;
+  padding: .5em .5em;
+
+  li {
+    background: white;
+    border-radius: .25rem;
+    padding: .5em;
+    margin-top: .5em;
+    border: 1px solid lightgray;
+
+    .player-number {
+      font-weight: bold;
+      color: red;
+    }
+
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+}
