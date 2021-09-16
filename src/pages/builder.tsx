@@ -24,15 +24,21 @@ const PlayerItem = ({ player, index }: { player: Player; index: number }) => {
   );
 };
 
-const SquadSelector = () => {
+type PlayerSetup = {
+  squad: Player[];
+  starting: Player[];
+  subs: Player[];
+}
+
+const SquadSelector = ({
+  updateSquad,
+}: {
+  updateSquad: (squad: PlayerSetup) => void,
+}) => {
   const startingId = "starting";
   const subsId = "subs";
   const squadId = "squad";
-  const [setup, setSetup] = useState<{
-    squad: Player[];
-    starting: Player[];
-    subs: Player[];
-  }>({
+  const [setup, setSetup] = useState<PlayerSetup>({
     squad: [],
     starting: [],
     subs: [],
@@ -48,6 +54,10 @@ const SquadSelector = () => {
         subs: [],
       });
   }, []);
+
+  useEffect(() => {
+    updateSquad(setup)
+  }, [setup])
 
   const move = (
     source,
@@ -79,9 +89,11 @@ const SquadSelector = () => {
   };
 
   const dragEnd = event => {
-    console.log("event", event);
-
     const { source, destination } = event;
+
+    if (!destination) {
+      return
+    }
 
     if (event.source.droppableId === event.destination.droppableId) {
       const result = reorder(
@@ -196,9 +208,11 @@ const Builder = () => {
     subs: 6,
   };
 
-  const [squad, setSquad] = useState<Player[]>([]);
-  const [selectedPlayers, setSelectedPlayers] = useState<Player[]>([]);
-  const [subs, setSubs] = useState<Player[]>([]);
+  const [setup, setSetup] = useState<PlayerSetup>({
+    starting: [],
+    subs: [],
+    squad: [],
+  })
   const [tab, setTab] = useState<number>(0);
   const [primaryColour, setPrimaryColour] = useState<string>(
     barca.primaryColour,
@@ -210,15 +224,12 @@ const Builder = () => {
   const [image, setImage] = useState<null | string | ArrayBuffer>(barca.image);
   const [badge, setBadge] = useState<null | string | ArrayBuffer>(barca.badge);
 
-  useEffect(() => {
-    const storedPlayers = localStorage.getItem("squad");
-
-    if (storedPlayers) setSquad(JSON.parse(storedPlayers));
-  }, []);
-
   const clear = () => {
-    setSelectedPlayers([]);
-    setSubs([]);
+    setSetup({
+      squad: [],
+      starting: [],
+      subs: [],
+    });
 
     setImage(null);
     setBadge(null);
@@ -285,8 +296,8 @@ const Builder = () => {
               <ImageBuilder
                 primaryColour={primaryColour}
                 secondaryColour={secondaryColour}
-                players={selectedPlayers}
-                subs={subs}
+                players={setup.starting}
+                subs={setup.subs}
                 capitalise={capitalise}
                 image={image}
                 badge={badge}
@@ -315,7 +326,9 @@ const Builder = () => {
               </div>
               <div className={`tab${tab === 0 ? " is-active" : ""}`}>
                 <label className="label">Starting XI</label>
-                <SquadSelector />
+                <SquadSelector updateSquad={(squad) => {
+                  setSetup(squad)
+                }} />
               </div>
               <div className={`tab${tab === 1 ? " is-active" : ""}`}>
                 <h4 className="title">Team Colour</h4>
