@@ -68,13 +68,26 @@ const SquadSelector = () => {
     return result;
 };
 
+const reorder = (list: Player[], startIndex, endIndex): Player[] => {
+  const result = Array.from(list);
+  const [removed] = result.splice(startIndex, 1);
+  result.splice(endIndex, 0, removed);
+
+  return result;
+};
+
   const dragEnd = event => {
     console.log("event", event);
 
     const {source, destination} = event
 
     if (event.source.droppableId === event.destination.droppableId) {
-      // TODO index change
+      const result = reorder(event.source.droppableId === squadId ? setup.squad : event.source.droppableId === startingId ? setup.starting : setup.subs, source.index, destination.index)
+
+      setSetup({
+        ...setup,
+        [event.source.droppableId === squadId ? 'squad' : event.source.droppableId === startingId ? 'starting' : 'subs']: result,
+      })
       return
     }
 
