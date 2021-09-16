@@ -43,7 +43,7 @@ const NewPlayer = ({
 
   return (
     <div className={`modal${open ? " is-active" : ""}`}>
-      <div className="modal-background"></div>
+      <div className="modal-background" onClick={close}></div>
       <button
         className="modal-close is-large"
         aria-label="close"

@@ -50,7 +50,6 @@ export const PlayerField = ({
               : []
           }
           onChange={positions => {
-            console.log("pos", positions);
             updatePlayer(
               {
                 ...player,
