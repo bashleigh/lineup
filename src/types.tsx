@@ -18,7 +18,7 @@ export enum Position {
 }
 
 export type Player = {
-  id: string,
+  id: string;
   number?: string;
   name?: string;
   position?: Position[];

@@ -10,11 +10,7 @@ import { Droppable, DragDropContext, Draggable } from "react-beautiful-dnd";
 
 const PlayerItem = ({ player, index }: { player: Player; index: number }) => {
   return (
-    <Draggable
-      key={player.id}
-      draggableId={player.id}
-      index={index}
-    >
+    <Draggable key={player.id} draggableId={player.id} index={index}>
       {provided => (
         <li
           ref={provided.innerRef}
@@ -33,27 +29,33 @@ const SquadSelector = () => {
   const subsId = "subs";
   const squadId = "squad";
   const [setup, setSetup] = useState<{
-    squad: Player[],
-    starting: Player[],
-    subs: Player[],
+    squad: Player[];
+    starting: Player[];
+    subs: Player[];
   }>({
     squad: [],
     starting: [],
     subs: [],
-  })
+  });
 
   useEffect(() => {
     const storedPlayers = localStorage.getItem("squad");
 
-    if (storedPlayers) setSetup({
-      squad: JSON.parse(storedPlayers),
-      starting: [],
-      subs: [],
-    });
+    if (storedPlayers)
+      setSetup({
+        squad: JSON.parse(storedPlayers),
+        starting: [],
+        subs: [],
+      });
   }, []);
 
-  const move = (source, destination, droppableSource, droppableDestination): {
-    [s: string]: Player[],
+  const move = (
+    source,
+    destination,
+    droppableSource,
+    droppableDestination,
+  ): {
+    [s: string]: Player[];
   } => {
     const sourceClone = Array.from(source);
     const destClone = Array.from(destination);
@@ -66,43 +68,73 @@ const SquadSelector = () => {
     result[droppableDestination.droppableId] = destClone;
 
     return result;
-};
+  };
 
-const reorder = (list: Player[], startIndex, endIndex): Player[] => {
-  const result = Array.from(list);
-  const [removed] = result.splice(startIndex, 1);
-  result.splice(endIndex, 0, removed);
+  const reorder = (list: Player[], startIndex, endIndex): Player[] => {
+    const result = Array.from(list);
+    const [removed] = result.splice(startIndex, 1);
+    result.splice(endIndex, 0, removed);
 
-  return result;
-};
+    return result;
+  };
 
   const dragEnd = event => {
     console.log("event", event);
 
-    const {source, destination} = event
+    const { source, destination } = event;
 
     if (event.source.droppableId === event.destination.droppableId) {
-      const result = reorder(event.source.droppableId === squadId ? setup.squad : event.source.droppableId === startingId ? setup.starting : setup.subs, source.index, destination.index)
+      const result = reorder(
+        event.source.droppableId === squadId
+          ? setup.squad
+          : event.source.droppableId === startingId
+          ? setup.starting
+          : setup.subs,
+        source.index,
+        destination.index,
+      );
 
       setSetup({
         ...setup,
-        [event.source.droppableId === squadId ? 'squad' : event.source.droppableId === startingId ? 'starting' : 'subs']: result,
-      })
-      return
+        [event.source.droppableId === squadId
+          ? "squad"
+          : event.source.droppableId === startingId
+          ? "starting"
+          : "subs"]: result,
+      });
+      return;
     }
 
-    let result
+    let result;
 
     switch (event.source.droppableId) {
       case squadId:
-
-        result = move(setup.squad, event.destination.droppableId === subsId ? setup.subs : setup.starting, source, destination)
+        result = move(
+          setup.squad,
+          event.destination.droppableId === subsId
+            ? setup.subs
+            : setup.starting,
+          source,
+          destination,
+        );
         break;
       case startingId:
-        result = move(setup.starting, event.destination.droppableId === subsId ? setup.subs : setup.squad, source, destination)
+        result = move(
+          setup.starting,
+          event.destination.droppableId === subsId ? setup.subs : setup.squad,
+          source,
+          destination,
+        );
         break;
       case subsId:
-        result = move(setup.subs, event.destination.droppableId === squadId ? setup.squad : setup.starting, source, destination)
+        result = move(
+          setup.subs,
+          event.destination.droppableId === squadId
+            ? setup.squad
+            : setup.starting,
+          source,
+          destination,
+        );
         break;
     }
 
@@ -110,7 +142,6 @@ const reorder = (list: Player[], startIndex, endIndex): Player[] => {
       ...setup,
       ...result,
     });
-    
   };
 
   return (
@@ -122,11 +153,7 @@ const reorder = (list: Player[], startIndex, endIndex): Player[] => {
             {provided => (
               <ul {...provided.droppableProps} ref={provided.innerRef}>
                 {setup.squad.map((player, index) => (
-                  <PlayerItem
-                    key={player.id}
-                    index={index}
-                    player={player}
-                  />
+                  <PlayerItem key={player.id} index={index} player={player} />
                 ))}
                 {provided.placeholder}
               </ul>
@@ -139,11 +166,7 @@ const reorder = (list: Player[], startIndex, endIndex): Player[] => {
             {provided => (
               <ul {...provided.droppableProps} ref={provided.innerRef}>
                 {setup.starting.map((player, index) => (
-                  <PlayerItem
-                    key={player.id}
-                    index={index}
-                    player={player}
-                  />
+                  <PlayerItem key={player.id} index={index} player={player} />
                 ))}
                 {provided.placeholder}
               </ul>
@@ -154,11 +177,7 @@ const reorder = (list: Player[], startIndex, endIndex): Player[] => {
             {provided => (
               <ul {...provided.droppableProps} ref={provided.innerRef}>
                 {setup.subs.map((player, index) => (
-                  <PlayerItem
-                    key={player.id}
-                    index={index}
-                    player={player}
-                  />
+                  <PlayerItem key={player.id} index={index} player={player} />
                 ))}
                 {provided.placeholder}
               </ul>

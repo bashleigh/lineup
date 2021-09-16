@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import Layout from "../components/layout";
 import { PlayerField } from "../components/player.details";
 import { Player } from "../types";
-import { v4 as uuid } from 'uuid'
+import { v4 as uuid } from "uuid";
 
 const NewPlayer = ({
   open,
