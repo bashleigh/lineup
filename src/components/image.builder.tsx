@@ -36,7 +36,7 @@ export const ImageBuilder = ({
         <label className="label">Starting XI</label>
         <ul className="players">
           {players.map(player => (
-            <li>
+            <li key={JSON.stringify(player)}>
               <DisplayPlayer
                 type="player"
                 numberColour={secondaryColour}

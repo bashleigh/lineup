@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import Layout from "../components/layout";
 import { PlayerField } from "../components/player.details";
 import { Player } from "../types";
+import { v4 as uuid } from 'uuid'
 
 const NewPlayer = ({
   open,
@@ -16,6 +17,7 @@ const NewPlayer = ({
   players: Player[];
 }) => {
   const [player, setPlayer] = useState<Player>({
+    id: uuid(),
     name: "",
     number: "",
     position: [],
@@ -62,7 +64,7 @@ const NewPlayer = ({
                   return;
                 }
                 const value = player;
-                setPlayer({ name: "", number: "", position: [] });
+                setPlayer({ id: uuid(), name: "", number: "", position: [] });
                 save(value);
               }}
             >

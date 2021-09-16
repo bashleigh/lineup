@@ -11,8 +11,8 @@ import { Droppable, DragDropContext, Draggable } from "react-beautiful-dnd";
 const PlayerItem = ({ player, index }: { player: Player; index: number }) => {
   return (
     <Draggable
-      key={`${player.number}-${player.name}`}
-      draggableId={`${player.number}-${player.name}`}
+      key={player.id}
+      draggableId={player.id}
       index={index}
     >
       {provided => (
@@ -28,84 +28,76 @@ const PlayerItem = ({ player, index }: { player: Player; index: number }) => {
   );
 };
 
-const SquadSelector = ({
-  squad,
-  subs,
-  starting,
-  updateSquad,
-  update11,
-  updateSubs,
-}: {
-  squad: Player[];
-  starting: Player[];
-  subs: Player[];
-  updateSquad: (squad: Player[]) => void;
-  update11: (squad: Player[]) => void;
-  updateSubs: (squad: Player[]) => void;
-}) => {
+const SquadSelector = () => {
   const startingId = "starting";
   const subsId = "subs";
   const squadId = "squad";
+  const [setup, setSetup] = useState<{
+    squad: Player[],
+    starting: Player[],
+    subs: Player[],
+  }>({
+    squad: [],
+    starting: [],
+    subs: [],
+  })
 
-  const dragEnd = result => {
-    console.log("result", result);
+  useEffect(() => {
+    const storedPlayers = localStorage.getItem("squad");
 
-    let player: Player | undefined;
+    if (storedPlayers) setSetup({
+      squad: JSON.parse(storedPlayers),
+      starting: [],
+      subs: [],
+    });
+  }, []);
 
-    switch (result.source.droppableId) {
+  const move = (source, destination, droppableSource, droppableDestination): {
+    [s: string]: Player[],
+  } => {
+    const sourceClone = Array.from(source);
+    const destClone = Array.from(destination);
+    const [removed] = sourceClone.splice(droppableSource.index, 1);
+
+    destClone.splice(droppableDestination.index, 0, removed);
+
+    const result = {};
+    result[droppableSource.droppableId] = sourceClone;
+    result[droppableDestination.droppableId] = destClone;
+
+    return result;
+};
+
+  const dragEnd = event => {
+    console.log("event", event);
+
+    const {source, destination} = event
+
+    if (event.source.droppableId === event.destination.droppableId) {
+      // TODO index change
+      return
+    }
+
+    let result
+
+    switch (event.source.droppableId) {
       case squadId:
-        player = squad.find(
-          squadPlayer =>
-            `${squadPlayer.number}-${squadPlayer.name}` === result.draggableId,
-        );
-        updateSquad(
-          squad.filter(
-            player =>
-              `${player.number}-${player.number}` !== result.draggableId,
-          ),
-        );
+
+        result = move(setup.squad, event.destination.droppableId === subsId ? setup.subs : setup.starting, source, destination)
         break;
       case startingId:
-        player = starting.find(
-          squadPlayer =>
-            `${squadPlayer.number}-${squadPlayer.name}` === result.draggableId,
-        );
-        update11(
-          starting.filter(
-            player =>
-              `${player.number}-${player.number}` !== result.draggableId,
-          ),
-        );
+        result = move(setup.starting, event.destination.droppableId === subsId ? setup.subs : setup.squad, source, destination)
         break;
       case subsId:
-        player = subs.find(
-          squadPlayer =>
-            `${squadPlayer.number}-${squadPlayer.name}` === result.draggableId,
-        );
-        updateSubs(
-          subs.filter(
-            player =>
-              `${player.number}-${player.number}` !== result.draggableId,
-          ),
-        );
+        result = move(setup.subs, event.destination.droppableId === squadId ? setup.squad : setup.starting, source, destination)
         break;
     }
 
-    console.log("update", player);
-
-    if (!player) return;
-
-    switch (result.destination.droppableId) {
-      case squadId:
-        updateSquad([...squad, player]);
-        break;
-      case startingId:
-        update11([...starting, player]);
-        break;
-      case subsId:
-        updateSubs([...subs, player]);
-        break;
-    }
+    setSetup({
+      ...setup,
+      ...result,
+    });
+    
   };
 
   return (
@@ -116,9 +108,9 @@ const SquadSelector = ({
           <Droppable droppableId={squadId}>
             {provided => (
               <ul {...provided.droppableProps} ref={provided.innerRef}>
-                {squad.map((player, index) => (
+                {setup.squad.map((player, index) => (
                   <PlayerItem
-                    key={JSON.stringify(player)}
+                    key={player.id}
                     index={index}
                     player={player}
                   />
@@ -133,6 +125,13 @@ const SquadSelector = ({
           <Droppable droppableId={startingId}>
             {provided => (
               <ul {...provided.droppableProps} ref={provided.innerRef}>
+                {setup.starting.map((player, index) => (
+                  <PlayerItem
+                    key={player.id}
+                    index={index}
+                    player={player}
+                  />
+                ))}
                 {provided.placeholder}
               </ul>
             )}
@@ -141,6 +140,13 @@ const SquadSelector = ({
           <Droppable droppableId={subsId}>
             {provided => (
               <ul {...provided.droppableProps} ref={provided.innerRef}>
+                {setup.subs.map((player, index) => (
+                  <PlayerItem
+                    key={player.id}
+                    index={index}
+                    player={player}
+                  />
+                ))}
                 {provided.placeholder}
               </ul>
             )}
@@ -277,14 +283,7 @@ const Builder = () => {
               </div>
               <div className={`tab${tab === 0 ? " is-active" : ""}`}>
                 <label className="label">Starting XI</label>
-                <SquadSelector
-                  squad={squad}
-                  starting={selectedPlayers}
-                  subs={subs}
-                  update11={setSelectedPlayers}
-                  updateSquad={setSquad}
-                  updateSubs={setSubs}
-                />
+                <SquadSelector />
               </div>
               <div className={`tab${tab === 1 ? " is-active" : ""}`}>
                 <h4 className="title">Team Colour</h4>

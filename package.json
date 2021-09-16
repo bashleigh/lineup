@@ -23,11 +23,13 @@
     "react-dom": "^16.12.0",
     "react-helmet": "^6.1.0",
     "react-multi-select-component": "^4.1.11",
-    "tinycolor2": "^1.4.2"
+    "tinycolor2": "^1.4.2",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@types/node": "^14.14.25",
     "@types/react": "^17.0.21",
+    "@types/uuid": "^8.3.1",
     "gatsby-plugin-sass": "^3.2.0",
     "gatsby-plugin-typescript": "^2.12.0",
     "node-sass": "^5.0.0",
