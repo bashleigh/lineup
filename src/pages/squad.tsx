@@ -128,7 +128,10 @@ export default () => {
               {player.number} {player.name}{" "}
               <div className="tags">
                 {player.position?.map(pos => (
-                  <span key={`${player.name}-${pos}`} className="tag">
+                  <span
+                    key={`${player.id}-${pos}`}
+                    className={`tag is-${pos.toLowerCase()}`}
+                  >
                     {pos}
                   </span>
                 ))}

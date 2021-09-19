@@ -13,11 +13,29 @@ const PlayerItem = ({ player, index }: { player: Player; index: number }) => {
     <Draggable key={player.id} draggableId={player.id} index={index}>
       {provided => (
         <li
+          className="player-info"
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
         >
-          <span className="player-number">{player.number}</span> {player.name}
+          <div className="columns">
+            <div className="column">
+              <span className="player-number">{player.number}</span>{" "}
+              {player.name}
+            </div>
+            <div className="column">
+              <div className="tags">
+                {player.position?.map(tag => (
+                  <div
+                    className={`tag is-primary is-${tag.toLowerCase()}`}
+                    key={`${player.id}-${tag}`}
+                  >
+                    {tag}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
         </li>
       )}
     </Draggable>
@@ -28,12 +46,12 @@ type PlayerSetup = {
   squad: Player[];
   starting: Player[];
   subs: Player[];
-}
+};
 
 const SquadSelector = ({
   updateSquad,
 }: {
-  updateSquad: (squad: PlayerSetup) => void,
+  updateSquad: (squad: PlayerSetup) => void;
 }) => {
   const startingId = "starting";
   const subsId = "subs";
@@ -56,8 +74,8 @@ const SquadSelector = ({
   }, []);
 
   useEffect(() => {
-    updateSquad(setup)
-  }, [setup])
+    updateSquad(setup);
+  }, [setup]);
 
   const move = (
     source,
@@ -92,7 +110,7 @@ const SquadSelector = ({
     const { source, destination } = event;
 
     if (!destination) {
-      return
+      return;
     }
 
     if (event.source.droppableId === event.destination.droppableId) {
@@ -160,10 +178,14 @@ const SquadSelector = ({
     <DragDropContext onDragEnd={dragEnd}>
       <div className="columns">
         <div className="column">
-          <label>Squad</label>
+          <label className="label">Squad</label>
           <Droppable droppableId={squadId}>
             {provided => (
-              <ul {...provided.droppableProps} ref={provided.innerRef} className="droppable-location">
+              <ul
+                {...provided.droppableProps}
+                ref={provided.innerRef}
+                className="droppable-location"
+              >
                 {setup.squad.map((player, index) => (
                   <PlayerItem key={player.id} index={index} player={player} />
                 ))}
@@ -173,10 +195,14 @@ const SquadSelector = ({
           </Droppable>
         </div>
         <div className="column">
-          <label>Starting XI</label>
+          <label className="label">Starting XI</label>
           <Droppable droppableId={startingId}>
             {provided => (
-              <ul {...provided.droppableProps} ref={provided.innerRef} className="droppable-location">
+              <ul
+                {...provided.droppableProps}
+                ref={provided.innerRef}
+                className="droppable-location"
+              >
                 {setup.starting.map((player, index) => (
                   <PlayerItem key={player.id} index={index} player={player} />
                 ))}
@@ -184,10 +210,14 @@ const SquadSelector = ({
               </ul>
             )}
           </Droppable>
-          <label>Subs</label>
+          <label className="label">Subs</label>
           <Droppable droppableId={subsId}>
             {provided => (
-              <ul {...provided.droppableProps} ref={provided.innerRef} className="droppable-location">
+              <ul
+                {...provided.droppableProps}
+                ref={provided.innerRef}
+                className="droppable-location"
+              >
                 {setup.subs.map((player, index) => (
                   <PlayerItem key={player.id} index={index} player={player} />
                 ))}
@@ -212,7 +242,7 @@ const Builder = () => {
     starting: [],
     subs: [],
     squad: [],
-  })
+  });
   const [tab, setTab] = useState<number>(0);
   const [primaryColour, setPrimaryColour] = useState<string>(
     barca.primaryColour,
@@ -223,7 +253,7 @@ const Builder = () => {
   const [capitalise, setCapitalise] = useState<boolean>(barca.capitalise);
   const [image, setImage] = useState<null | string | ArrayBuffer>(barca.image);
   const [badge, setBadge] = useState<null | string | ArrayBuffer>(barca.badge);
-  const [badgeOn, setBadgeOn] = useState<boolean>(true)
+  const [badgeOn, setBadgeOn] = useState<boolean>(true);
 
   const clear = () => {
     setSetup({
@@ -327,10 +357,11 @@ const Builder = () => {
                 </ul>
               </div>
               <div className={`tab${tab === 0 ? " is-active" : ""}`}>
-                <label className="label">Starting XI</label>
-                <SquadSelector updateSquad={(squad) => {
-                  setSetup(squad)
-                }} />
+                <SquadSelector
+                  updateSquad={squad => {
+                    setSetup(squad);
+                  }}
+                />
               </div>
               <div className={`tab${tab === 1 ? " is-active" : ""}`}>
                 <h4 className="title">Team Colour</h4>
@@ -400,7 +431,12 @@ const Builder = () => {
                 <label className="label">Badge</label>
                 <label>
                   Show Badge
-                  <input name="badge-on" type="radio" checked={badgeOn} onClick={() => setBadgeOn(!badgeOn)} />
+                  <input
+                    name="badge-on"
+                    type="radio"
+                    checked={badgeOn}
+                    onClick={() => setBadgeOn(!badgeOn)}
+                  />
                 </label>
                 <div className="file is-boxed">
                   <label className="file-label">

@@ -12,23 +12,6 @@
   background: lightgrey;
   min-height: 100px;
   padding: .5em .5em;
-
-  li {
-    background: white;
-    border-radius: .25rem;
-    padding: .5em;
-    margin-top: .5em;
-    border: 1px solid lightgray;
-
-    .player-number {
-      font-weight: bold;
-      color: red;
-    }
-
-    &:first-child {
-      margin-top: 0;
-    }
-  }
 }
 
 .modal-content {
@@ -37,4 +20,50 @@
 
 .dropdown-content {
   z-index: 999;
+}
+
+.player-info {
+  background: white;
+  border-radius: .25rem;
+  padding: .5em;
+  margin-top: .5em;
+  border: 1px solid lightgray;
+
+  .player-number {
+    font-weight: bold;
+    color: red;
+  }
+
+  &:first-child {
+    margin-top: 0;
+  }
+}
+
+.tags {
+  .tag {
+    &.is-st, &.is-lst, &.is-rst {
+      background: red;
+      color: white;
+    }
+
+    &.is-rw, &.is-lw {
+      background: blue;
+      color: white;
+    }
+
+    &.is-lm, &.is-cm, &.is-cdm, &.is-rm, &.is-cam {
+      background: green;
+      color: white;
+    }
+
+    &.is-lb, &.is-rb, &.is-lwb, &.is-rwb, &.is-cb {
+      background: gold;
+      color: white;
+    }
+
+    &.is-gk {
+      background-color: turquoise;
+      color: white;
+    }
+  }
 }

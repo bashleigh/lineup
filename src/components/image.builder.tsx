@@ -17,7 +17,7 @@ export const ImageBuilder = ({
 }: {
   image?: string | null | ArrayBuffer;
   badge?: string | null | ArrayBuffer;
-  badgeOn: boolean,
+  badgeOn: boolean;
   primaryColour: string;
   secondaryColour: string;
   capitalise: boolean;
