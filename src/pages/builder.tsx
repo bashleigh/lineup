@@ -1,4 +1,4 @@
-import { ImageBuilder } from "../components/image.builder";
+import { ImageBuilder, ImageLayout } from "../components/image.builder";
 import React, { useState, useEffect } from "react";
 import { ChromePicker } from "react-color";
 import { Player } from "./../types";
@@ -254,6 +254,7 @@ const Builder = () => {
   const [image, setImage] = useState<null | string | ArrayBuffer>(barca.image);
   const [badge, setBadge] = useState<null | string | ArrayBuffer>(barca.badge);
   const [badgeOn, setBadgeOn] = useState<boolean>(true);
+  const [layout, setLayout] = useState<ImageLayout>(ImageLayout.STRIPES);
 
   const clear = () => {
     setSetup({
@@ -333,27 +334,30 @@ const Builder = () => {
                 image={image}
                 badge={badge}
                 badgeOn={badgeOn}
+                layout={layout}
               />
             </div>
             <div className="column">
               <div className="tabs">
                 <ul>
-                  {["Squad", "Styles", "Images"].map((tabName, index) => (
-                    <li
-                      key={`tab-button-${tabName}-${index}`}
-                      className={tab === index ? "is-active" : undefined}
-                    >
-                      <a
-                        href="#"
-                        onClick={event => {
-                          event.preventDefault();
-                          setTab(index);
-                        }}
+                  {["Squad", "Styles", "Images", "Layouts"].map(
+                    (tabName, index) => (
+                      <li
+                        key={`tab-button-${tabName}-${index}`}
+                        className={tab === index ? "is-active" : undefined}
                       >
-                        {tabName}
-                      </a>
-                    </li>
-                  ))}
+                        <a
+                          href="#"
+                          onClick={event => {
+                            event.preventDefault();
+                            setTab(index);
+                          }}
+                        >
+                          {tabName}
+                        </a>
+                      </li>
+                    ),
+                  )}
                 </ul>
               </div>
               <div className={`tab${tab === 0 ? " is-active" : ""}`}>
@@ -469,6 +473,47 @@ const Builder = () => {
                 >
                   Remove
                 </a>
+              </div>
+              <div className={`tab${tab === 3 ? " is-active" : ""}`}>
+                <h4 className="title">Layout</h4>
+                <label className="label">Background Type</label>
+                <label className="radio">
+                  Stripes
+                  <input
+                    name="layout"
+                    type="radio"
+                    checked={layout === ImageLayout.STRIPES}
+                    onClick={() => setLayout(ImageLayout.STRIPES)}
+                  />
+                </label>
+                <label className="radio">
+                  Marble
+                  <input
+                    name="layout"
+                    type="radio"
+                    checked={layout === ImageLayout.MARBLE}
+                    onClick={() => setLayout(ImageLayout.MARBLE)}
+                  />
+                </label>
+                <label className="label">Border</label>
+                <label className="radio">
+                  Bordered
+                  <input
+                    name="layout"
+                    type="radio"
+                    checked={layout === ImageLayout.STRIPES}
+                    onClick={() => setLayout(ImageLayout.STRIPES)}
+                  />
+                </label>
+                <label className="radio">
+                  Side
+                  <input
+                    name="layout"
+                    type="radio"
+                    checked={layout === ImageLayout.MARBLE}
+                    onClick={() => setLayout(ImageLayout.MARBLE)}
+                  />
+                </label>
               </div>
             </div>
           </div>

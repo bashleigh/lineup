@@ -5,9 +5,30 @@
   max-height: 600px;
   max-width: 650px;
   min-width: 650px;
+  overflow: hidden;
 
   display: flex;
   flex-direction: row;
+  position: relative;
+
+  .builder-before {
+    display: none;
+  }
+
+  &.is-marble {
+    .builder-before {
+      display: block;
+      // filter: saturate(20%);
+      opacity: .5;
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 1;
+    }
+  }
   
   .text {
     display: flex;
@@ -15,6 +36,7 @@
     justify-content: space-between;
     padding: 2em;
     min-width: 35%;
+    z-index: 100;
   }
 
   .image-container {
@@ -22,6 +44,7 @@
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
+    z-index: 100;
 
     &.has-only-badge {
 
