@@ -10,6 +10,11 @@ export enum ImageLayout {
   MARBLE = "marble",
 }
 
+export enum ImageStyle {
+  BORDERED = "bordered",
+  SIDE = "side",
+}
+
 export const ImageBuilder = ({
   image,
   badge,
@@ -20,6 +25,7 @@ export const ImageBuilder = ({
   subs,
   badgeOn,
   layout,
+  style,
 }: {
   image?: string | null | ArrayBuffer;
   badge?: string | null | ArrayBuffer;
@@ -30,6 +36,7 @@ export const ImageBuilder = ({
   players: Player[];
   subs: Player[];
   layout: ImageLayout;
+  style: ImageStyle;
 }) => {
   return (
     <div
@@ -43,7 +50,9 @@ export const ImageBuilder = ({
             : marbleBackground(primaryColour)
         }")`,
       }}
-      className={`${capitalise ? "is-capitalised " : ""}is-${layout}`}
+      className={`${
+        capitalise ? "is-capitalised " : ""
+      }is-${layout} is-${style}`}
     >
       <div
         className="builder-before"
@@ -51,7 +60,15 @@ export const ImageBuilder = ({
           backgroundColor: tinycolor(primaryColour),
         }}
       ></div>
-      <div className="text">
+      <div
+        className={`text`}
+        style={{
+          backgroundColor:
+            style === ImageStyle.BORDERED
+              ? getCorrectTextColor(primaryColour, true)
+              : undefined,
+        }}
+      >
         <div className="player-container">
           <label className="label">Starting XI</label>
           <ul className="players">

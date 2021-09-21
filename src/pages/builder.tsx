@@ -1,4 +1,8 @@
-import { ImageBuilder, ImageLayout } from "../components/image.builder";
+import {
+  ImageBuilder,
+  ImageLayout,
+  ImageStyle,
+} from "../components/image.builder";
 import React, { useState, useEffect } from "react";
 import { ChromePicker } from "react-color";
 import { Player } from "./../types";
@@ -255,6 +259,7 @@ const Builder = () => {
   const [badge, setBadge] = useState<null | string | ArrayBuffer>(barca.badge);
   const [badgeOn, setBadgeOn] = useState<boolean>(true);
   const [layout, setLayout] = useState<ImageLayout>(ImageLayout.STRIPES);
+  const [style, setStyle] = useState<ImageStyle>(ImageStyle.SIDE);
 
   const clear = () => {
     setSetup({
@@ -335,6 +340,7 @@ const Builder = () => {
                 badge={badge}
                 badgeOn={badgeOn}
                 layout={layout}
+                style={style}
               />
             </div>
             <div className="column">
@@ -495,23 +501,23 @@ const Builder = () => {
                     onClick={() => setLayout(ImageLayout.MARBLE)}
                   />
                 </label>
-                <label className="label">Border</label>
+                <label className="label">Style</label>
                 <label className="radio">
                   Bordered
                   <input
-                    name="layout"
+                    name="image-style"
                     type="radio"
-                    checked={layout === ImageLayout.STRIPES}
-                    onClick={() => setLayout(ImageLayout.STRIPES)}
+                    checked={style === ImageStyle.BORDERED}
+                    onClick={() => setStyle(ImageStyle.BORDERED)}
                   />
                 </label>
                 <label className="radio">
                   Side
                   <input
-                    name="layout"
+                    name="image-style"
                     type="radio"
-                    checked={layout === ImageLayout.MARBLE}
-                    onClick={() => setLayout(ImageLayout.MARBLE)}
+                    checked={style === ImageStyle.SIDE}
+                    onClick={() => setStyle(ImageStyle.SIDE)}
                   />
                 </label>
               </div>

@@ -9,7 +9,8 @@
 
   display: flex;
   flex-direction: row;
-  position: relative;
+  position: sticky;
+  top: 1.5em;
 
   .builder-before {
     display: none;
@@ -18,7 +19,6 @@
   &.is-marble {
     .builder-before {
       display: block;
-      // filter: saturate(20%);
       opacity: .5;
       content: '';
       position: absolute;
@@ -27,6 +27,20 @@
       bottom: 0;
       left: 0;
       z-index: 1;
+    }
+  }
+
+  &.is-bordered {
+    .text {
+      position: absolute;
+      top: 4rem;
+      right: 4rem;
+      bottom: 4rem;
+      left: 4rem;
+    }
+
+    .image-container {
+      display: none;
     }
   }
   
