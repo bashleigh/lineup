@@ -236,31 +236,44 @@ const SquadSelector = ({
 };
 
 const Builder = () => {
-  // for changing to 5 a side later on
-  const options = {
-    players: 11,
-    subs: 6,
-  };
-
   const [setup, setSetup] = useState<PlayerSetup>({
     starting: [],
     subs: [],
     squad: [],
   });
   const [tab, setTab] = useState<number>(0);
-  const [primaryColour, setPrimaryColour] = useState<string>(
-    barca.primaryColour,
-  );
-  const [secondaryColour, setSecondaryColour] = useState<string>(
-    barca.secondaryColour,
-  );
-  const [capitalise, setCapitalise] = useState<boolean>(barca.capitalise);
-  const [image, setImage] = useState<null | string | ArrayBuffer>(barca.image);
-  const [badge, setBadge] = useState<null | string | ArrayBuffer>(barca.badge);
-  const [badgeOn, setBadgeOn] = useState<boolean>(true);
-  const [layout, setLayout] = useState<ImageLayout>(ImageLayout.STRIPES);
-  const [style, setStyle] = useState<ImageStyle>(ImageStyle.SIDE);
-  const [lineupText, setLineupText] = useState<boolean>(true);
+
+  const [options, setOptions] = useState<{
+    primaryColour: string;
+    secondaryColour: string;
+    image: null | string | ArrayBuffer;
+    badge: null | string | ArrayBuffer;
+    badgeOn: boolean;
+    layout: ImageLayout;
+    style: ImageStyle;
+    lineupText: boolean;
+    capitalise: boolean;
+  }>({
+    primaryColour: barca.primaryColour,
+    secondaryColour: barca.secondaryColour,
+    image: barca.image,
+    badge: barca.badge,
+    badgeOn: true,
+    layout: ImageLayout.STRIPES,
+    style: ImageStyle.SIDE,
+    lineupText: true,
+    capitalise: true,
+  });
+
+  useEffect(() => {
+    const builderOptions = localStorage.getItem("builderOptions");
+
+    if (builderOptions) setOptions(JSON.parse(builderOptions));
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("builderOptions", JSON.stringify(options));
+  }, [options]);
 
   const clear = () => {
     setSetup({
@@ -269,8 +282,11 @@ const Builder = () => {
       subs: [],
     });
 
-    setImage(null);
-    setBadge(null);
+    setOptions({
+      ...options,
+      image: null,
+      badge: null,
+    });
   };
 
   let fileReader: FileReader;
@@ -279,7 +295,10 @@ const Builder = () => {
     fileReader = new window.FileReader();
 
     fileReader.onload = () => {
-      setImage(fileReader.result);
+      setOptions({
+        ...options,
+        image: fileReader.result,
+      });
     };
   }
 
@@ -289,7 +308,10 @@ const Builder = () => {
     badgeFileReader = new window.FileReader();
 
     badgeFileReader.onload = () => {
-      setBadge(badgeFileReader.result);
+      setOptions({
+        ...options,
+        badge: fileReader.result,
+      });
     };
   }
 
@@ -332,17 +354,17 @@ const Builder = () => {
                 </div>
               </div>
               <ImageBuilder
-                primaryColour={primaryColour}
-                secondaryColour={secondaryColour}
+                primaryColour={options.primaryColour}
+                secondaryColour={options.secondaryColour}
                 players={setup.starting}
                 subs={setup.subs}
-                capitalise={capitalise}
-                image={image}
-                badge={badge}
-                badgeOn={badgeOn}
-                layout={layout}
-                style={style}
-                lineupText={lineupText}
+                capitalise={options.capitalise}
+                image={options.image}
+                badge={options.badge}
+                badgeOn={options.badgeOn}
+                layout={options.layout}
+                style={options.style}
+                lineupText={options.lineupText}
               />
             </div>
             <div className="column">
@@ -380,16 +402,22 @@ const Builder = () => {
                 <label className="label">First Colour</label>
                 <ChromePicker
                   onChange={colour => {
-                    setPrimaryColour(colour.hex);
+                    setOptions({
+                      ...options,
+                      primaryColour: colour.hex,
+                    });
                   }}
-                  color={primaryColour}
+                  color={options.primaryColour}
                 />
                 <label className="label">Second Colour</label>
                 <ChromePicker
                   onChange={colour => {
-                    setSecondaryColour(colour.hex);
+                    setOptions({
+                      ...options,
+                      secondaryColour: colour.hex,
+                    });
                   }}
-                  color={secondaryColour}
+                  color={options.secondaryColour}
                 />
                 <hr />
                 <h4 className="title">Text styles</h4>
@@ -398,8 +426,13 @@ const Builder = () => {
                     <label className="checkbox">
                       <input
                         type="checkbox"
-                        checked={capitalise}
-                        onChange={() => setCapitalise(!capitalise)}
+                        checked={options.capitalise}
+                        onChange={() =>
+                          setOptions({
+                            ...options,
+                            capitalise: !options.capitalise,
+                          })
+                        }
                       />
                       Capitalise
                     </label>
@@ -435,7 +468,10 @@ const Builder = () => {
                   href="#"
                   onClick={event => {
                     event.preventDefault();
-                    setImage(null);
+                    setOptions({
+                      ...options,
+                      image: null,
+                    });
                   }}
                 >
                   Remove
@@ -446,8 +482,13 @@ const Builder = () => {
                   <input
                     name="badge-on"
                     type="radio"
-                    checked={badgeOn}
-                    onClick={() => setBadgeOn(!badgeOn)}
+                    checked={options.badgeOn}
+                    onClick={() =>
+                      setOptions({
+                        ...options,
+                        badgeOn: !options.badgeOn,
+                      })
+                    }
                   />
                 </label>
                 <div className="file is-boxed">
@@ -476,7 +517,10 @@ const Builder = () => {
                   href="#"
                   onClick={event => {
                     event.preventDefault();
-                    setBadge(null);
+                    setOptions({
+                      ...options,
+                      image: null,
+                    });
                   }}
                 >
                   Remove
@@ -490,8 +534,10 @@ const Builder = () => {
                   <input
                     name="layout"
                     type="radio"
-                    checked={layout === ImageLayout.STRIPES}
-                    onClick={() => setLayout(ImageLayout.STRIPES)}
+                    checked={options.layout === ImageLayout.STRIPES}
+                    onClick={() =>
+                      setOptions({ ...options, layout: ImageLayout.STRIPES })
+                    }
                   />
                 </label>
                 <label className="radio">
@@ -499,8 +545,10 @@ const Builder = () => {
                   <input
                     name="layout"
                     type="radio"
-                    checked={layout === ImageLayout.MARBLE}
-                    onClick={() => setLayout(ImageLayout.MARBLE)}
+                    checked={options.layout === ImageLayout.MARBLE}
+                    onClick={() =>
+                      setOptions({ ...options, layout: ImageLayout.MARBLE })
+                    }
                   />
                 </label>
                 <label className="label">Style</label>
@@ -509,8 +557,10 @@ const Builder = () => {
                   <input
                     name="image-style"
                     type="radio"
-                    checked={style === ImageStyle.BORDERED}
-                    onClick={() => setStyle(ImageStyle.BORDERED)}
+                    checked={options.style === ImageStyle.BORDERED}
+                    onClick={() =>
+                      setOptions({ ...options, style: ImageStyle.BORDERED })
+                    }
                   />
                 </label>
                 <label className="radio">
@@ -518,21 +568,28 @@ const Builder = () => {
                   <input
                     name="image-style"
                     type="radio"
-                    checked={style === ImageStyle.SIDE}
-                    onClick={() => setStyle(ImageStyle.SIDE)}
+                    checked={options.style === ImageStyle.SIDE}
+                    onClick={() =>
+                      setOptions({ ...options, style: ImageStyle.SIDE })
+                    }
                   />
                 </label>
 
                 <br />
                 <label className="label">Properties</label>
-                {style === ImageStyle.BORDERED && (
+                {options.style === ImageStyle.BORDERED && (
                   <label className="checkbox">
                     LINE UP text
                     <input
                       name="lineup-text"
                       type="checkbox"
-                      checked={lineupText}
-                      onClick={() => setLineupText(!lineupText)}
+                      checked={options.lineupText}
+                      onClick={() =>
+                        setOptions({
+                          ...options,
+                          lineupText: !options.lineupText,
+                        })
+                      }
                     />
                   </label>
                 )}
