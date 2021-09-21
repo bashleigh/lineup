@@ -26,6 +26,7 @@ export const ImageBuilder = ({
   badgeOn,
   layout,
   style,
+  lineupText,
 }: {
   image?: string | null | ArrayBuffer;
   badge?: string | null | ArrayBuffer;
@@ -37,6 +38,7 @@ export const ImageBuilder = ({
   subs: Player[];
   layout: ImageLayout;
   style: ImageStyle;
+  lineupText: boolean;
 }) => {
   return (
     <div
@@ -61,7 +63,11 @@ export const ImageBuilder = ({
         }}
       ></div>
       <div
-        className={`text`}
+        className={`text${
+          lineupText && style === ImageStyle.BORDERED
+            ? " has-lineup-text-enabled"
+            : ""
+        }`}
         style={{
           backgroundColor:
             style === ImageStyle.BORDERED
@@ -69,6 +75,18 @@ export const ImageBuilder = ({
               : undefined,
         }}
       >
+        {lineupText && style === ImageStyle.BORDERED && (
+          <div className="lineup-text">
+            <h1
+              className="title"
+              style={{
+                color: getCorrectTextColor(primaryColour),
+              }}
+            >
+              Line Up
+            </h1>
+          </div>
+        )}
         <div className="player-container">
           <label className="label">Starting XI</label>
           <ul className="players">

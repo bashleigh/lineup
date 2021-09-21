@@ -51,6 +51,29 @@
     padding: 2em;
     min-width: 35%;
     z-index: 100;
+    position: relative;
+
+    &.has-lineup-text-enabled {
+      padding-left: 4em;
+    }
+
+    .lineup-text {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: -2.5em;
+
+      h1.title {
+        color: white;
+        text-align: center;
+        position: absolute;
+        top: 20%;
+        left: 0;
+        font-size: 5em;
+        writing-mode: vertical-rl;
+        text-orientation: mixed;
+      }
+    }
   }
 
   .image-container {

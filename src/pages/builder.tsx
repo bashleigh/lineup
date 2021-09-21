@@ -260,6 +260,7 @@ const Builder = () => {
   const [badgeOn, setBadgeOn] = useState<boolean>(true);
   const [layout, setLayout] = useState<ImageLayout>(ImageLayout.STRIPES);
   const [style, setStyle] = useState<ImageStyle>(ImageStyle.SIDE);
+  const [lineupText, setLineupText] = useState<boolean>(true);
 
   const clear = () => {
     setSetup({
@@ -341,6 +342,7 @@ const Builder = () => {
                 badgeOn={badgeOn}
                 layout={layout}
                 style={style}
+                lineupText={lineupText}
               />
             </div>
             <div className="column">
@@ -520,6 +522,20 @@ const Builder = () => {
                     onClick={() => setStyle(ImageStyle.SIDE)}
                   />
                 </label>
+
+                <br />
+                <label className="label">Properties</label>
+                {style === ImageStyle.BORDERED && (
+                  <label className="checkbox">
+                    LINE UP text
+                    <input
+                      name="lineup-text"
+                      type="checkbox"
+                      checked={lineupText}
+                      onClick={() => setLineupText(!lineupText)}
+                    />
+                  </label>
+                )}
               </div>
             </div>
           </div>
