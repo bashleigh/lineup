@@ -5,9 +5,44 @@
   max-height: 600px;
   max-width: 650px;
   min-width: 650px;
+  overflow: hidden;
 
   display: flex;
   flex-direction: row;
+  position: sticky;
+  top: 1.5em;
+
+  .builder-before {
+    display: none;
+  }
+
+  &.is-marble {
+    .builder-before {
+      display: block;
+      opacity: .5;
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 1;
+    }
+  }
+
+  &.is-bordered {
+    .text {
+      position: absolute;
+      top: 4rem;
+      right: 4rem;
+      bottom: 4rem;
+      left: 4rem;
+    }
+
+    .image-container {
+      display: none;
+    }
+  }
   
   .text {
     display: flex;
@@ -15,6 +50,30 @@
     justify-content: space-between;
     padding: 2em;
     min-width: 35%;
+    z-index: 100;
+    position: relative;
+
+    &.has-lineup-text-enabled {
+      padding-left: 4em;
+    }
+
+    .lineup-text {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: -2.5em;
+
+      h1.title {
+        color: white;
+        text-align: center;
+        position: absolute;
+        top: 20%;
+        left: 0;
+        font-size: 5em;
+        writing-mode: vertical-rl;
+        text-orientation: mixed;
+      }
+    }
   }
 
   .image-container {
@@ -22,6 +81,7 @@
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
+    z-index: 100;
 
     &.has-only-badge {
 
